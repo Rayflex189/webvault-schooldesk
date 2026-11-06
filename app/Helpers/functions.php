@@ -46,7 +46,8 @@ function view($path, $data = []) {
  * Redirect to a specific path
  */
 function redirect($path) {
-    header("Location: " . rtrim(env('APP_URL', ''), '/') . '/' . ltrim($path, '/'));
+    // Use relative path to avoid Codespaces URL issues
+    header("Location: /" . ltrim($path, '/'));
     exit;
 }
 
