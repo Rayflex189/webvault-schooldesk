@@ -23,13 +23,13 @@ class Database {
         try {
             $this->pdo = new PDO($dsn, $user, $pass, $options);
         } catch (\PDOException $e) {
-            // In production, log this error instead of dying
-            if (env('APP_DEBUG') === 'true') {
-                die("Database Connection Error: " . $e->getMessage());
-            } else {
-                die("Could not connect to the database.");
-            }
-        }
+    // In production, log this error instead of dying
+    if (env('APP_DEBUG')) { // <--- Fixed!
+        die("Database Connection Error: " . $e->getMessage());
+    } else {
+        die("Could not connect to the database.");
+    }
+}
     }
 
     public static function getInstance() {
