@@ -11,8 +11,9 @@ if (file_exists(__DIR__ . '/../.env')) {
     }
 }
 
-// 2. Load Helpers
+// 2. Load Helpers & Config  <--- UPDATED COMMENT
 require_once __DIR__ . '/../app/Helpers/functions.php';
+require_once __DIR__ . '/../config/database.php'; // <--- ADDED THIS LINE
 
 // 3. Start Secure Session
 if (session_status() === PHP_SESSION_NONE) {
@@ -37,7 +38,7 @@ spl_autoload_register(function ($class) {
 
 // 5. Get the Request URI
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-$uri = trim(str_replace('/webyault-schooldesk/public', '', $uri), '/'); // Adjust for subfolder if needed
+$uri = trim(str_replace('/webvault-schooldesk/public', '', $uri), '/'); // Adjusted spelling here too
 if ($uri === '') $uri = '/';
 
 // 6. Load Routes
