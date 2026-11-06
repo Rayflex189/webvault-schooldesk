@@ -1,7 +1,4 @@
 -- Create the database (if it doesn't exist) and use it
-CREATE DATABASE IF NOT EXISTS `webvault_schooldesk`;
-USE `webvault_schooldesk`;
-
 -- Roles Table
 CREATE TABLE IF NOT EXISTS `roles` (
   `id` TINYINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
