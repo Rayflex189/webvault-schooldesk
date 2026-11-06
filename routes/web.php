@@ -1,20 +1,29 @@
 <?php
 // routes/web.php
 
-// Return an array of routes
+use App\Controllers\AuthController;
+use App\Middleware\AuthMiddleware;
+
 return [
-    // URI => [Controller, Method] or Closure
+    // Public Routes
     '/' => function() {
-        if (isset($_SESSION['user_id'])) {
-            redirect('admin/dashboard');
-        }
         redirect('login');
     },
     'login' => function() {
-        view('auth.login');
+        $auth = new AuthController();
+        $auth->login();
     },
+    'logout' => function() {
+        $auth = new AuthController();
+        $auth->logout();
+    },
+
+    // Protected Admin Routes
     'admin/dashboard' => function() {
-        // This will eventually be handled by an AdminController
+        // Enforce authentication and admin role
+        AuthMiddleware::adminOnly();
+        
+        // Render dashboard
         view('admin.dashboard');
     }
 ];
