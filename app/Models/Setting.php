@@ -23,16 +23,17 @@ class Setting {
         $pdo = Database::getInstance();
         
         $sql = "UPDATE school_settings 
-                SET school_name = :name, motto = :motto, address = :address, phone = :phone, email = :email 
+                SET school_name = :name, motto = :motto, address = :address, phone = :phone, email = :email, contact_email = :contact_email 
                 WHERE id = 1";
                 
         $stmt = $pdo->prepare($sql);
         return $stmt->execute([
-            ':name'    => $data['school_name'],
-            ':motto'   => $data['motto'],
-            ':address' => $data['address'],
-            ':phone'   => $data['phone'],
-            ':email'   => $data['email']
+            ':name'          => $data['school_name'],
+            ':motto'         => $data['motto'],
+            ':address'       => $data['address'],
+            ':phone'         => $data['phone'],
+            ':email'         => $data['email'],
+            ':contact_email' => $data['contact_email']
         ]);
     }
 
