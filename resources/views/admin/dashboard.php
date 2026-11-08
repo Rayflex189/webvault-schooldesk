@@ -1,7 +1,5 @@
 <?php
 // resources/views/admin/dashboard.php
-
-// Capture the view content
 ob_start();
 ?>
 
@@ -29,9 +27,9 @@ ob_start();
         </div>
         <div class="mt-4">
             <p class="text-xs text-gray-500 font-medium uppercase tracking-wider">Total Students</p>
-            <h3 class="text-2xl font-bold text-gray-800 mt-1">1,245</h3>
+            <h3 class="text-2xl font-bold text-gray-800 mt-1"><?= number_format($stats['students']) ?></h3>
             <p class="text-xs text-green-600 mt-2 flex items-center gap-1 font-medium">
-                <i data-lucide="arrow-up-right" class="w-3 h-3"></i> 12 this month
+                <i data-lucide="arrow-up-right" class="w-3 h-3"></i> Active Enrolled
             </p>
         </div>
     </div>
@@ -45,9 +43,9 @@ ob_start();
         </div>
         <div class="mt-4">
             <p class="text-xs text-gray-500 font-medium uppercase tracking-wider">Total Teachers</p>
-            <h3 class="text-2xl font-bold text-gray-800 mt-1">86</h3>
+            <h3 class="text-2xl font-bold text-gray-800 mt-1"><?= number_format($stats['teachers']) ?></h3>
             <p class="text-xs text-green-600 mt-2 flex items-center gap-1 font-medium">
-                <i data-lucide="arrow-up-right" class="w-3 h-3"></i> 8 this month
+                <i data-lucide="arrow-up-right" class="w-3 h-3"></i> Active Staff
             </p>
         </div>
     </div>
@@ -61,9 +59,9 @@ ob_start();
         </div>
         <div class="mt-4">
             <p class="text-xs text-gray-500 font-medium uppercase tracking-wider">Attendance Today</p>
-            <h3 class="text-2xl font-bold text-gray-800 mt-1">92%</h3>
-            <p class="text-xs text-green-600 mt-2 flex items-center gap-1 font-medium">
-                <i data-lucide="arrow-up-right" class="w-3 h-3"></i> 5% vs yesterday
+            <h3 class="text-2xl font-bold text-gray-800 mt-1"><?= $stats['attendance_percentage'] ?>%</h3>
+            <p class="text-xs text-gray-500 mt-2 flex items-center gap-1 font-medium">
+                Based on today's records
             </p>
         </div>
     </div>
@@ -77,25 +75,25 @@ ob_start();
         </div>
         <div class="mt-4">
             <p class="text-xs text-gray-500 font-medium uppercase tracking-wider">Fees Collection</p>
-            <h3 class="text-2xl font-bold text-gray-800 mt-1">₦2,450,000</h3>
+            <h3 class="text-2xl font-bold text-gray-800 mt-1">₦<?= number_format($stats['fees_collected'], 2) ?></h3>
             <p class="text-xs text-green-600 mt-2 flex items-center gap-1 font-medium">
-                <i data-lucide="arrow-up-right" class="w-3 h-3"></i> 18% this month
+                <i data-lucide="arrow-up-right" class="w-3 h-3"></i> First Term Total
             </p>
         </div>
     </div>
 
-    <!-- Card 5: Parents -->
+    <!-- Card 5: Classes -->
     <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex flex-col justify-between">
         <div class="flex items-start justify-between">
             <div class="p-2 bg-purple-50 text-purple-600 rounded-lg">
-                <i data-lucide="users-2" class="w-5 h-5"></i>
+                <i data-lucide="school" class="w-5 h-5"></i>
             </div>
         </div>
         <div class="mt-4">
-            <p class="text-xs text-gray-500 font-medium uppercase tracking-wider">Parents</p>
-            <h3 class="text-2xl font-bold text-gray-800 mt-1">1,102</h3>
-            <p class="text-xs text-green-600 mt-2 flex items-center gap-1 font-medium">
-                <i data-lucide="arrow-up-right" class="w-3 h-3"></i> 10 this month
+            <p class="text-xs text-gray-500 font-medium uppercase tracking-wider">Total Classes</p>
+            <h3 class="text-2xl font-bold text-gray-800 mt-1"><?= number_format($stats['classes']) ?></h3>
+            <p class="text-xs text-gray-500 mt-2 flex items-center gap-1 font-medium">
+                Across all levels
             </p>
         </div>
     </div>
@@ -111,26 +109,36 @@ ob_start();
         <div class="flex-1 bg-gray-50 rounded-lg border-2 border-dashed border-gray-200 flex items-center justify-center text-gray-400">
             <div class="text-center">
                 <i data-lucide="bar-chart-3" class="w-10 h-10 mx-auto mb-2 text-gray-300"></i>
-                <p class="text-sm">Chart.js will render here in Phase 4</p>
+                <p class="text-sm">Chart.js will render here in a future update</p>
             </div>
         </div>
     </div>
 
-    <!-- Recent Activities -->
+    <!-- Recent Activities (Recently Added Students) -->
     <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
         <div class="flex justify-between items-center mb-4">
-            <h2 class="text-lg font-bold text-gray-800">Recent Activities</h2>
+            <h2 class="text-lg font-bold text-gray-800">Recent Admissions</h2>
+            <a href="/admin/students" class="text-sm text-accent font-medium hover:underline">View All</a>
         </div>
         <div class="space-y-4">
-            <div class="flex gap-3">
-                <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center shrink-0">
-                    <i data-lucide="user-plus" class="w-4 h-4"></i>
-                </div>
-                <div>
-                    <p class="text-sm font-medium text-gray-800">System Initialized</p>
-                    <p class="text-xs text-gray-500">SchoolDesk is ready to use.</p>
-                </div>
-            </div>
+            
+            <?php if(empty($recentStudents)): ?>
+                <p class="text-sm text-gray-500 text-center py-4">No recent admissions.</p>
+            <?php else: ?>
+                <?php foreach($recentStudents as $student): ?>
+                    <div class="flex gap-3">
+                        <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center shrink-0">
+                            <i data-lucide="user-plus" class="w-4 h-4"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-800"><?= e($student['first_name'] . ' ' . $student['last_name']) ?></p>
+                            <p class="text-xs text-gray-500">Admitted to <?= e($student['class_name'] ?? 'Unassigned') ?></p>
+                            <p class="text-[10px] text-gray-400 mt-1"><?= date('M j, Y', strtotime($student['created_at'])) ?></p>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
+
         </div>
     </div>
 </div>
