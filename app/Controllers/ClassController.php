@@ -8,9 +8,6 @@ use App\Middleware\AuthMiddleware;
 
 class ClassController {
     
-    /**
-     * List all classes
-     */
     public function index() {
         AuthMiddleware::adminOnly();
         $classModel = new SchoolClass();
@@ -18,17 +15,11 @@ class ClassController {
         view('admin.classes.index', ['classes' => $classes]);
     }
 
-    /**
-     * Show the create class form
-     */
     public function create() {
         AuthMiddleware::adminOnly();
         view('admin.classes.create');
     }
 
-    /**
-     * Store a new class in the database
-     */
     public function store() {
         AuthMiddleware::adminOnly();
         verify_csrf($_POST['csrf_token'] ?? '');
@@ -50,13 +41,40 @@ class ClassController {
         }
     }
 
-    /**
-     * Show the form to manage subjects assigned to a specific class
-     */
+    public function edit() {
+        AuthMiddleware::adminOnly();
+        $id = $_GET['id'] ?? null;
+        if (!$id) redirect('admin/classes');
+
+        $model = new SchoolClass();
+        $class = $model->find($id);
+
+        if (!$class) redirect('admin/classes');
+
+        view('admin.classes.edit', ['class' => $class]);
+    }
+
+    public function update() {
+        AuthMiddleware::adminOnly();
+        verify_csrf($_POST['csrf_token'] ?? '');
+        
+        $id = $_POST['id'] ?? null;
+        if (!$id) redirect('admin/classes');
+
+        $model = new SchoolClass();
+        $success = $model->update($id, $_POST);
+
+        if ($success) {
+            $_SESSION['success'] = "Class updated successfully!";
+        } else {
+            $_SESSION['error'] = "Failed to update class.";
+        }
+        redirect('admin/classes');
+    }
+
     public function manageSubjects() {
         AuthMiddleware::adminOnly();
         
-        // Get class ID from URL query parameter (?id=1)
         $classId = $_GET['id'] ?? null;
         if (!$classId) {
             redirect('admin/classes');
@@ -64,7 +82,6 @@ class ClassController {
 
         $classModel = new SchoolClass();
         
-        // Find the specific class details
         $classes = $classModel->all();
         $currentClass = null;
         foreach ($classes as $c) {
@@ -88,9 +105,6 @@ class ClassController {
         ]);
     }
 
-    /**
-     * Save the subject assignments to the database
-     */
     public function updateSubjects() {
         AuthMiddleware::adminOnly();
         verify_csrf($_POST['csrf_token'] ?? '');
@@ -100,7 +114,6 @@ class ClassController {
             redirect('admin/classes');
         }
 
-        // If no boxes are checked, $_POST['subjects'] won't exist, so default to empty array
         $subjectIds = $_POST['subjects'] ?? []; 
         
         $classModel = new SchoolClass();
