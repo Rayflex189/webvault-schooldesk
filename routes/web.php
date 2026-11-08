@@ -103,6 +103,14 @@ return [
         $controller = new TeacherController();
         $controller->store();
     },
+    'admin/teachers/edit' => function() {
+        $controller = new TeacherController();
+        $controller->edit();
+    },
+    'admin/teachers/update' => function() {
+        $controller = new TeacherController();
+        $controller->update();
+    },
 
     // Admin: Parent Management
     'admin/parents' => function() {
@@ -144,6 +152,14 @@ return [
     'admin/classes/store' => function() {
         $controller = new ClassController();
         $controller->store();
+    },
+    'admin/classes/edit' => function() {
+        $controller = new ClassController();
+        $controller->edit();
+    },
+    'admin/classes/update' => function() {
+        $controller = new ClassController();
+        $controller->update();
     },
     'admin/classes/subjects' => function() {
         $controller = new ClassController();
