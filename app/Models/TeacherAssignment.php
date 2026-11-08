@@ -1,78 +1,85 @@
 <?php
-// app/Controllers/TeacherController.php
+// app/Models/TeacherAssignment.php
 
-namespace App\Controllers;
+namespace App\Models;
 
-use App\Models\Teacher;
-use App\Middleware\AuthMiddleware;
+use Database;
+use PDO;
 
-class TeacherController {
+class TeacherAssignment {
     
-    public function index() {
-        AuthMiddleware::adminOnly();
-        $teacherModel = new Teacher();
-        $teachers = $teacherModel->all();
-        view('admin.teachers.index', ['teachers' => $teachers]);
-    }
-
-    public function create() {
-        AuthMiddleware::adminOnly();
-        view('admin.teachers.create');
-    }
-
-    public function store() {
-        AuthMiddleware::adminOnly();
+    public function all() {
+        $pdo = Database::getInstance();
+        $sql = "SELECT ta.id, 
+                       t.first_name AS teacher_fname, t.last_name AS teacher_lname,
+                       c.name AS class_name, 
+                       s.name AS subject_name, s.code AS subject_code
+                FROM teacher_assignments ta
+                JOIN teachers t ON ta.teacher_id = t.id
+                JOIN classes c ON ta.class_id = c.id
+                JOIN subjects s ON ta.subject_id = s.id
+                ORDER BY c.name ASC, s.name ASC";
         
-        verify_csrf($_POST['csrf_token'] ?? '');
-        
-        $required = ['staff_id', 'first_name', 'last_name', 'email', 'phone', 'gender', 'qualification'];
-        foreach ($required as $field) {
-            if (empty($_POST[$field])) {
-                $_SESSION['error'] = "All fields are required.";
-                redirect('admin/teachers/create');
-            }
-        }
-
-        $teacherModel = new Teacher();
-        $success = $teacherModel->create($_POST);
-
-        if ($success) {
-            $_SESSION['success'] = "Teacher registered successfully! Default password is 'password123'.";
-            redirect('admin/teachers');
-        } else {
-            $_SESSION['error'] = "Failed to register teacher. Email or Staff ID might already exist.";
-            redirect('admin/teachers/create');
-        }
+        return $pdo->query($sql)->fetchAll();
     }
 
-    public function edit() {
-        AuthMiddleware::adminOnly();
-        $id = $_GET['id'] ?? null;
-        if (!$id) redirect('admin/teachers');
-
-        $model = new Teacher();
-        $teacher = $model->find($id);
-
-        if (!$teacher) redirect('admin/teachers');
-
-        view('admin.teachers.edit', ['teacher' => $teacher]);
+    public function create($data) {
+        $pdo = Database::getInstance();
+        $sql = "INSERT INTO teacher_assignments (teacher_id, class_id, subject_id) 
+                VALUES (:teacher_id, :class_id, :subject_id)";
+        $stmt = $pdo->prepare($sql);
+        return $stmt->execute([
+            ':teacher_id' => $data['teacher_id'],
+            ':class_id'   => $data['class_id'],
+            ':subject_id' => $data['subject_id']
+        ]);
     }
 
-    public function update() {
-        AuthMiddleware::adminOnly();
-        verify_csrf($_POST['csrf_token'] ?? '');
-        
-        $id = $_POST['id'] ?? null;
-        if (!$id) redirect('admin/teachers');
+    public function getTeachers() {
+        $pdo = Database::getInstance();
+        return $pdo->query("SELECT id, first_name, last_name FROM teachers ORDER BY first_name ASC")->fetchAll();
+    }
 
-        $model = new Teacher();
-        $success = $model->update($id, $_POST);
+    public function getClasses() {
+        $pdo = Database::getInstance();
+        return $pdo->query("SELECT id, name FROM classes ORDER BY name ASC")->fetchAll();
+    }
 
-        if ($success) {
-            $_SESSION['success'] = "Teacher updated successfully!";
-        } else {
-            $_SESSION['error'] = "Failed to update teacher.";
-        }
-        redirect('admin/teachers');
+    public function getSubjects() {
+        $pdo = Database::getInstance();
+        return $pdo->query("SELECT id, name, code FROM subjects ORDER BY name ASC")->fetchAll();
+    }
+
+    public function getAssignmentsByUserId($userId) {
+        $pdo = Database::getInstance();
+        $sql = "SELECT ta.id, c.id AS class_id, c.name AS class_name, s.name AS subject_name, s.id AS subject_id
+                FROM teacher_assignments ta
+                JOIN teachers t ON ta.teacher_id = t.id
+                JOIN classes c ON ta.class_id = c.id
+                JOIN subjects s ON ta.subject_id = s.id
+                WHERE t.user_id = ?";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([$userId]);
+        return $stmt->fetchAll();
+    }
+
+    public function isTeacherAssignedToClass($userId, $classId) {
+        $pdo = Database::getInstance();
+        $sql = "SELECT COUNT(*) FROM teacher_assignments ta
+                JOIN teachers t ON ta.teacher_id = t.id
+                WHERE t.user_id = ? AND ta.class_id = ?";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([$userId, $classId]);
+        return $stmt->fetchColumn() > 0;
+    }
+
+    public function isTeacherAssigned($userId, $classId, $subjectId) {
+        $pdo = Database::getInstance();
+        $sql = "SELECT COUNT(*) FROM teacher_assignments ta
+                JOIN teachers t ON ta.teacher_id = t.id
+                WHERE t.user_id = ? AND ta.class_id = ? AND ta.subject_id = ?";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([$userId, $classId, $subjectId]);
+        return $stmt->fetchColumn() > 0;
     }
 }
