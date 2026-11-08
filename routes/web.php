@@ -9,6 +9,7 @@ use App\Controllers\ClassController;
 use App\Controllers\TeacherAssignmentController;
 use App\Controllers\AttendanceController;
 use App\Controllers\ExamController;
+use App\Controllers\ReportCardController;
 use App\Middleware\AuthMiddleware;
 
 return [
@@ -153,5 +154,17 @@ return [
     'admin/exams/store' => function() {
         $controller = new ExamController();
         $controller->store();
+    },
+
+    // ==========================================
+    // Report Cards
+    // ==========================================
+    'admin/reports' => function() {
+        $controller = new ReportCardController();
+        $controller->index();
+    },
+    'admin/reports/generate' => function() {
+        $controller = new ReportCardController();
+        $controller->generate();
     }
 ];
