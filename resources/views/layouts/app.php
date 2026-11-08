@@ -73,11 +73,12 @@
                 Teachers
             </a> 
 
-            <!-- Subjects Link -->
-<a href="/admin/subjects" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/admin/subjects') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
-    <i data-lucide="book" class="w-5 h-5"></i>
-    Subjects
-</a>
+<td class="px-6 py-4 text-right space-x-2">
+    <a href="/admin/classes/subjects?id=<?= $class['id'] ?>" class="inline-flex items-center gap-1 text-sm text-accent hover:text-blue-700 font-medium transition-colors mr-2">
+        <i data-lucide="book-open" class="w-4 h-4"></i> Subjects
+    </a>
+    <button class="text-gray-400 hover:text-primary transition-colors"><i data-lucide="edit" class="w-4 h-4"></i></button>
+</td>
 
 <!-- Classes Link -->
 <a href="/admin/classes" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/admin/classes') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
