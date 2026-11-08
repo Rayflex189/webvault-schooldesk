@@ -17,6 +17,7 @@ use App\Controllers\TeacherDashboardController;
 use App\Controllers\TeacherAttendanceController;
 use App\Controllers\TeacherExamController;
 use App\Controllers\ParentDashboardController;
+use App\Controllers\StudentDashboardController;
 
 return [
     // ==========================================
@@ -224,5 +225,21 @@ return [
     'parent/dashboard' => function() {
         $controller = new ParentDashboardController();
         $controller->index();
+    },
+    'parent/report-card' => function() {
+        $controller = new ParentDashboardController();
+        $controller->reportCard();
+    },
+
+    // ==========================================
+    // Student Portal Routes
+    // ==========================================
+    'student/dashboard' => function() {
+        $controller = new StudentDashboardController();
+        $controller->index();
+    },
+    'student/report-card' => function() {
+        $controller = new StudentDashboardController();
+        $controller->reportCard();
     }
 ];
