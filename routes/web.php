@@ -3,6 +3,7 @@
 
 use App\Controllers\AuthController;
 use App\Controllers\StudentController;
+use App\Controllers\TeacherController;
 use App\Middleware\AuthMiddleware;
 
 return [
@@ -36,6 +37,20 @@ return [
     },
     'admin/students/store' => function() {
         $controller = new StudentController();
+        $controller->store();
+    },
+
+    // Teacher Management Routes
+    'admin/teachers' => function() {
+        $controller = new TeacherController();
+        $controller->index();
+    },
+    'admin/teachers/create' => function() {
+        $controller = new TeacherController();
+        $controller->create();
+    },
+    'admin/teachers/store' => function() {
+        $controller = new TeacherController();
         $controller->store();
     }
 ];
