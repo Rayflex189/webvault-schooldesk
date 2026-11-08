@@ -12,9 +12,16 @@ class ExamController {
         AuthMiddleware::adminOnly();
         $model = new ExamResult();
         
+        // Get active session/term for default selection
+        $settings = get_settings();
+        $defaultSession = $settings['current_session'] ?? '2024/2025';
+        $defaultTerm = $settings['current_term'] ?? 'First Term';
+
         view('admin.exams.index', [
             'classes'  => $model->getClasses(),
-            'subjects' => $model->getSubjects()
+            'subjects' => $model->getSubjects(),
+            'default_session' => $defaultSession,
+            'default_term' => $defaultTerm
         ]);
     }
 
@@ -23,8 +30,11 @@ class ExamController {
         
         $classId = $_GET['class_id'] ?? null;
         $subjectId = $_GET['subject_id'] ?? null;
-        $session = $_GET['session'] ?? '2023/2024';
-        $term = $_GET['term'] ?? 'First Term';
+        
+        // Fallback to global settings if not provided
+        $settings = get_settings();
+        $session = $_GET['session'] ?? $settings['current_session'] ?? '2024/2025';
+        $term = $_GET['term'] ?? $settings['current_term'] ?? 'First Term';
 
         if (!$classId || !$subjectId) {
             redirect('admin/exams');
