@@ -9,7 +9,7 @@ use PDO;
 class TeacherAssignment {
     
     /**
-     * Get all assignments with joined names for display
+     * Get all assignments with joined names for display (Admin View)
      */
     public function all() {
         $pdo = Database::getInstance();
@@ -26,6 +26,9 @@ class TeacherAssignment {
         return $pdo->query($sql)->fetchAll();
     }
 
+    /**
+     * Create a new assignment
+     */
     public function create($data) {
         $pdo = Database::getInstance();
         
@@ -63,5 +66,23 @@ class TeacherAssignment {
     public function getSubjects() {
         $pdo = Database::getInstance();
         return $pdo->query("SELECT id, name, code FROM subjects ORDER BY name ASC")->fetchAll();
+    }
+
+    /**
+     * Get assignments for a specific teacher based on their User ID (Teacher Portal)
+     */
+    public function getAssignmentsByUserId($userId) {
+        $pdo = Database::getInstance();
+        
+        $sql = "SELECT ta.id, c.id AS class_id, c.name AS class_name, s.name AS subject_name, s.id AS subject_id
+                FROM teacher_assignments ta
+                JOIN teachers t ON ta.teacher_id = t.id
+                JOIN classes c ON ta.class_id = c.id
+                JOIN subjects s ON ta.subject_id = s.id
+                WHERE t.user_id = ?";
+                
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([$userId]);
+        return $stmt->fetchAll();
     }
 }
