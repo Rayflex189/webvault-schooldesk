@@ -249,6 +249,10 @@ return [
         $controller = new ParentDashboardController();
         $controller->reportCard();
     },
+    'parent/fees' => function() {
+        $controller = new ParentDashboardController();
+        $controller->fees();
+    },
 
     // ==========================================
     // Student Portal Routes
