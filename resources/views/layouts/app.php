@@ -33,32 +33,46 @@
         ::-webkit-scrollbar-thumb:hover { background: #475569; }
     </style>
 </head>
-<body class="bg-bg text-textMain font-sans antialiased flex h-screen overflow-hidden">
+<body class="bg-bg text-textMain font-sans antialiased flex h-screen overflow-hidden relative">
+
+    <!-- Mobile Overlay (Darkens background when menu is open) -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-40 hidden md:hidden transition-opacity"></div>
 
     <!-- Sidebar -->
-    <aside class="w-64 bg-primary text-white flex flex-col hidden md:flex h-full shadow-lg z-20">
-        <div class="h-16 flex items-center px-6 border-b border-blue-800">
+    <!-- Note: The classes here handle the mobile slide-in/out effect -->
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-primary text-white flex flex-col h-full shadow-lg transform -translate-x-full md:translate-x-0 md:static transition-transform duration-300 ease-in-out">
+        <div class="h-16 flex items-center justify-between px-6 border-b border-blue-800">
             <div class="flex items-center gap-3 text-xl font-bold tracking-tight">
                 <div class="bg-white p-1.5 rounded-lg text-primary">
                     <i data-lucide="graduation-cap" class="w-5 h-5"></i>
                 </div>
                 SchoolDesk
             </div>
+            <!-- Mobile Close Button -->
+            <button id="close-sidebar" class="md:hidden text-gray-300 hover:text-white p-1">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
         </div>
 
         <nav class="flex-1 overflow-y-auto py-4 px-3 space-y-1">
-            <a href="/admin/dashboard" class="flex items-center gap-3 px-3 py-2.5 bg-blue-800 text-white rounded-lg font-medium transition-colors">
+            <!-- Dashboard Link -->
+            <a href="/admin/dashboard" class="flex items-center gap-3 px-3 py-2.5 <?= $_SERVER['REQUEST_URI'] == '/admin/dashboard' ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
                 <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
                 Dashboard
             </a>
-            <a href="/admin/students" class="flex items-center gap-3 px-3 py-2.5 text-blue-200 hover:bg-blue-800/50 hover:text-white rounded-lg font-medium transition-colors">
+            
+            <!-- Students Link -->
+            <a href="/admin/students" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/admin/students') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
                 <i data-lucide="users" class="w-5 h-5"></i>
                 Students
             </a>
-            <a href="/admin/teacher" class="flex items-center gap-3 px-3 py-2.5 text-blue-200 hover:bg-blue-800/50 hover:text-white rounded-lg font-medium transition-colors">
+            
+            <!-- Teachers Link -->
+            <a href="/admin/teachers" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/admin/teachers') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
                 <i data-lucide="user-check" class="w-5 h-5"></i>
                 Teachers
             </a>
+            
             <a href="#" class="flex items-center gap-3 px-3 py-2.5 text-blue-200 hover:bg-blue-800/50 hover:text-white rounded-lg font-medium transition-colors">
                 <i data-lucide="calendar" class="w-5 h-5"></i>
                 Attendance
@@ -73,20 +87,79 @@
             <div class="flex items-center gap-3">
                 <div class="w-9 h-9 rounded-full bg-accent flex items-center justify-center text-sm font-bold">AD</div>
                 <div>
-                    <p class="text-sm font-medium               <p class="text-xs text-blue-300">Super Admin</p>
-               </div>
-           </div>
-       </div>
-    </as
-    !-- Main Content Area -->
-    <iv class="flex-1 flex flex-col h-full overflow-hidden">
-      
+                    <p class="text-sm font-medium"><?= htmlspecialchars($_SESSION['username'] ?? 'Admin') ?></p>
+                    <p class="text-xs text-blue-300">Super Admin</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="flex-1 flex flex-col h-full overflow-hidden w-full">
+        
         <!-- Top Header -->
-        <header class="h-16 bg-white border-b brder-gray-200 flex items-center justify-between px-6 z-10 shadow-sm">
-            <div class="flex items-center gap-4"
-                <button class="md:hidden text-gray-500 hover:text-primary">
-                    <i data-lucide="menu" class="w-6 h-6"></
+        <header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-4 sm:px-6 z-30 shadow-sm shrink-0">
+            <div class="flex items-center gap-4">
+                <!-- Hamburger Button (Mobile Only) -->
+                <button id="mobile-menu-btn" class="md:hidden text-gray-600 hover:text-primary p-1">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
                 </button>
+                
                 <div class="relative hidden sm:block">
-                    <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i
-                    <input type="text" placeholder="Search anything..." class="pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent w
+                    <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                    <input type="text" placeholder="Search anything..." class="pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent w-64">
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-4 text-gray-500">
+                <button class="hover:text-primary relative">
+                    <i data-lucide="bell" class="w-5 h-5"></i>
+                    <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
+                </button>
+                
+                <!-- User Dropdown (Simple link for now) -->
+                <div class="flex items-center gap-2 cursor-pointer border-l pl-4 border-gray-200 ml-2">
+                    <img src="https://ui-avatars.com/api/?name=<?= urlencode($_SESSION['username'] ?? 'Admin') ?>&background=0EA5E9&color=fff" class="w-8 h-8 rounded-full">
+                    <span class="text-sm font-medium text-gray-700 hidden sm:block"><?= htmlspecialchars($_SESSION['username'] ?? 'Admin') ?></span>
+                    <a href="/logout" class="text-red-500 hover:text-red-700 ml-2" title="Logout">
+                        <i data-lucide="log-out" class="w-4 h-4"></i>
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dynamic Page Content -->
+        <main class="flex-1 overflow-y-auto p-4 sm:p-6 pb-20">
+            <?= $content ?? '' ?>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Mobile Menu Logic
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const closeSidebarBtn = document.getElementById('close-sidebar');
+
+        function toggleSidebar() {
+            // Toggle the slide-in class
+            sidebar.classList.toggle('-translate-x-full');
+            // Toggle the dark overlay
+            overlay.classList.toggle('hidden');
+        }
+
+        // Open menu
+        mobileMenuBtn.addEventListener('click', toggleSidebar);
+        
+        // Close menu on X button click
+        closeSidebarBtn.addEventListener('click', toggleSidebar);
+        
+        // Close menu when clicking outside on the dark overlay
+        overlay.addEventListener('click', toggleSidebar);
+    </script>
+</body>
+</html>
