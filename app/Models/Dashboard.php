@@ -20,8 +20,8 @@ class Dashboard {
         // 2. Total Teachers
         $teachers = $pdo->query("SELECT COUNT(*) FROM teachers WHERE status = 'active'")->fetchColumn();
         
-        // 3. Total Classes
-        $classes = $pdo->query("SELECT COUNT(*) FROM classes")->fetchColumn();
+        // 3. Total Parents (Users with role_id = 3)
+        $parents = $pdo->query("SELECT COUNT(*) FROM users WHERE role_id = 3 AND status = 'active'")->fetchColumn();
         
         // 4. Attendance Today
         $today = date('Y-m-d');
@@ -36,7 +36,7 @@ class Dashboard {
         return [
             'students' => $students,
             'teachers' => $teachers,
-            'classes' => $classes,
+            'parents' => $parents, // <-- Added
             'attendance_percentage' => $attendancePercentage,
             'fees_collected' => $feesCollected
         ];
