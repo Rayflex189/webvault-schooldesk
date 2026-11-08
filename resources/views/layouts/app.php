@@ -101,7 +101,13 @@
             <a href="/admin/attendance" class="flex items-center gap-3 px-3 py-2.5 text-blue-200 hover:bg-blue-800/50 hover:text-white rounded-lg font-medium transition-colors">
                 <i data-lucide="calendar" class="w-5 h-5"></i>
                 Attendance
-            </a>
+            </a> 
+
+            <!-- Exams Link -->
+<a href="/admin/exams" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/admin/exams') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
+    <i data-lucide="file-edit" class="w-5 h-5"></i>
+    Exams & Results
+</a>
             <a href="#" class="flex items-center gap-3 px-3 py-2.5 text-blue-200 hover:bg-blue-800/50 hover:text-white rounded-lg font-medium transition-colors">
                 <i data-lucide="wallet" class="w-5 h-5"></i>
                 Fees & Payments
