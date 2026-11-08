@@ -8,6 +8,9 @@ use PDO;
 
 class Dashboard {
     
+    /**
+     * Get the top-level statistics for the dashboard cards
+     */
     public function getStats($session = '2024/2025', $term = 'First Term') {
         $pdo = Database::getInstance();
         
@@ -39,6 +42,9 @@ class Dashboard {
         ];
     }
 
+    /**
+     * Get recent student admissions
+     */
     public function getRecentStudents() {
         $pdo = Database::getInstance();
         return $pdo->query("
@@ -48,5 +54,33 @@ class Dashboard {
             ORDER BY s.created_at DESC 
             LIMIT 4
         ")->fetchAll();
+    }
+
+    /**
+     * Get student count grouped by class
+     */
+    public function getStudentDistribution() {
+        $pdo = Database::getInstance();
+        $sql = "SELECT c.name AS class_name, COUNT(s.id) AS student_count 
+                FROM classes c 
+                LEFT JOIN students s ON c.id = s.class_id AND s.status = 'active'
+                GROUP BY c.id 
+                ORDER BY c.name ASC";
+        return $pdo->query($sql)->fetchAll();
+    }
+
+    /**
+     * Get total present vs absent for the last 7 days
+     */
+    public function getAttendanceTrend() {
+        $pdo = Database::getInstance();
+        $sql = "SELECT date, 
+                       SUM(CASE WHEN status = 'present' THEN 1 ELSE 0 END) as present_count,
+                       SUM(CASE WHEN status = 'absent' THEN 1 ELSE 0 END) as absent_count
+                FROM attendance 
+                WHERE date >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)
+                GROUP BY date 
+                ORDER BY date ASC";
+        return $pdo->query($sql)->fetchAll();
     }
 }
