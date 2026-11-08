@@ -26,7 +26,7 @@
                         }
                     },
                     animation: {
-                        'fade-in': 'fadeIn 0.4s ease-out forwards',
+                        'fade-in': 'fadeIn 0.3s ease-out forwards',
                     }
                 }
             }
@@ -63,76 +63,77 @@
         </div>
 
         <nav class="flex-1 overflow-y-auto py-4 px-3 space-y-1">
-            <!-- Dashboard Link -->
-            <a href="/admin/dashboard" class="flex items-center gap-3 px-3 py-2.5 <?= $_SERVER['REQUEST_URI'] == '/admin/dashboard' ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
-                <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
-                Dashboard
-            </a> 
+            <?php if(isset($_SESSION['role_id']) && $_SESSION['role_id'] == 1): ?>
+                <!-- ================= ADMIN MENU ================= -->
+                <p class="px-3 text-xs font-semibold text-blue-300 uppercase tracking-wider mb-2 mt-2">Management</p>
+                <a href="/admin/dashboard" class="flex items-center gap-3 px-3 py-2.5 <?= $_SERVER['REQUEST_URI'] == '/admin/dashboard' ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
+                    <i data-lucide="layout-dashboard" class="w-5 h-5"></i> Dashboard
+                </a>
+                <a href="/admin/announcements" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/admin/announcements') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
+                    <i data-lucide="megaphone" class="w-5 h-5"></i> Announcements
+                </a>
+                <a href="/admin/students" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/admin/students') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
+                    <i data-lucide="users" class="w-5 h-5"></i> Students
+                </a>
+                <a href="/admin/teachers" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/admin/teachers') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
+                    <i data-lucide="user-check" class="w-5 h-5"></i> Teachers
+                </a>
+                
+                <p class="px-3 text-xs font-semibold text-blue-300 uppercase tracking-wider mb-2 mt-6">Academics</p>
+                <a href="/admin/classes" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/admin/classes') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
+                    <i data-lucide="school" class="w-5 h-5"></i> Classes
+                </a>
+                <a href="/admin/subjects" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/admin/subjects') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
+                    <i data-lucide="book" class="w-5 h-5"></i> Subjects
+                </a>
+                <a href="/admin/assignments" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/admin/assignments') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
+                    <i data-lucide="clipboard-list" class="w-5 h-5"></i> Assignments
+                </a>
+                <a href="/admin/attendance" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/admin/attendance') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
+                    <i data-lucide="calendar" class="w-5 h-5"></i> Attendance
+                </a>
+                <a href="/admin/exams" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/admin/exams') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
+                    <i data-lucide="file-edit" class="w-5 h-5"></i> Exams
+                </a>
+                <a href="/admin/reports" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/admin/reports') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
+                    <i data-lucide="printer" class="w-5 h-5"></i> Report Cards
+                </a>
 
-            <!-- Announcements Link -->
-<a href="/admin/announcements" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/admin/announcements') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
-    <i data-lucide="megaphone" class="w-5 h-5"></i>
-    Announcements
-</a>
-            
-            <!-- Students Link -->
-            <a href="/admin/students" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/admin/students') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
-                <i data-lucide="users" class="w-5 h-5"></i>
-                Students
-            </a>
-            
-            <!-- Teachers Link -->
-            <a href="/admin/teachers" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/admin/teachers') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
-                <i data-lucide="user-check" class="w-5 h-5"></i>
-                Teachers
-            </a> 
-
-            <!-- Subjects Link -->
-            <a href="/admin/subjects" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/admin/subjects') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
-                <i data-lucide="book" class="w-5 h-5"></i>
-                Subjects
-            </a>
-
-            <!-- Classes Link -->
-            <a href="/admin/classes" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/admin/classes') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
-                <i data-lucide="school" class="w-5 h-5"></i>
-                Classes
-            </a> 
-            <!-- Teacher Assignments Link -->
-<a href="/admin/assignments" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/admin/assignments') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
-    <i data-lucide="clipboard-list" class="w-5 h-5"></i>
-    Assignments
-</a>
-            
-            <a href="/admin/attendance" class="flex items-center gap-3 px-3 py-2.5 text-blue-200 hover:bg-blue-800/50 hover:text-white rounded-lg font-medium transition-colors">
-                <i data-lucide="calendar" class="w-5 h-5"></i>
-                Attendance
-            </a> 
-
-            <!-- Exams Link -->
-<a href="/admin/exams" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/admin/exams') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
-    <i data-lucide="file-edit" class="w-5 h-5"></i>
-    Exams & Results
-</a> 
-
-            <!-- Report Cards Link -->
-<a href="/admin/reports" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/admin/reports') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
-    <i data-lucide="printer" class="w-5 h-5"></i>
-    Report Cards
-</a>
-            <a href="/admin/finance" class="flex items-center gap-3 px-3 py-2.5 text-blue-200 hover:bg-blue-800/50 hover:text-white rounded-lg font-medium transition-colors">
-                <i data-lucide="wallet" class="w-5 h-5"></i>
-                Fees & Payments
-            </a>
+                <p class="px-3 text-xs font-semibold text-blue-300 uppercase tracking-wider mb-2 mt-6">Finance</p>
+                <a href="/admin/finance" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/admin/finance') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
+                    <i data-lucide="wallet" class="w-5 h-5"></i> Fees & Payments
+                </a>
+                
+            <?php elseif(isset($_SESSION['role_id']) && $_SESSION['role_id'] == 2): ?>
+                <!-- ================= TEACHER MENU ================= -->
+                <p class="px-3 text-xs font-semibold text-blue-300 uppercase tracking-wider mb-2 mt-2">Teacher Portal</p>
+                <a href="/teacher/dashboard" class="flex items-center gap-3 px-3 py-2.5 <?= $_SERVER['REQUEST_URI'] == '/teacher/dashboard' ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
+                    <i data-lucide="layout-dashboard" class="w-5 h-5"></i> My Dashboard
+                </a>
+                <a href="/teacher/attendance" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/teacher/attendance') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
+                    <i data-lucide="clipboard-check" class="w-5 h-5"></i> Take Attendance
+                </a>
+                <a href="/teacher/exams" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/teacher/exams') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
+                    <i data-lucide="file-edit" class="w-5 h-5"></i> Enter Scores
+                </a>
+            <?php endif; ?>
         </nav>
         
+        <!-- User Profile Snippet -->
         <div class="p-4 border-t border-blue-800">
             <div class="flex items-center gap-3">
-                <div class="w-9 h-9 rounded-full bg-accent flex items-center justify-center text-sm font-bold">AD</div>
-                <div>
-                    <p class="text-sm font-medium"><?= htmlspecialchars($_SESSION['username'] ?? 'Admin') ?></p>
-                    <p class="text-xs text-blue-300">Super Admin</p>
+                <div class="w-9 h-9 rounded-full bg-accent flex items-center justify-center text-sm font-bold uppercase">
+                    <?= substr($_SESSION['username'] ?? 'U', 0, 2) ?>
                 </div>
+                <div class="flex-1 min-w-0">
+                    <p class="text-sm font-medium truncate"><?= htmlspecialchars($_SESSION['username'] ?? 'User') ?></p>
+                    <p class="text-xs text-blue-300">
+                        <?= $_SESSION['role_id'] == 1 ? 'Administrator' : 'Teacher' ?>
+                    </p>
+                </div>
+                <a href="/logout" class="text-blue-300 hover:text-red-400 transition-colors" title="Logout">
+                    <i data-lucide="log-out" class="w-4 h-4"></i>
+                </a>
             </div>
         </div>
     </aside>
@@ -162,8 +163,8 @@
                 
                 <!-- User Dropdown -->
                 <div class="flex items-center gap-2 cursor-pointer border-l pl-4 border-gray-200 ml-2">
-                    <img src="https://ui-avatars.com/api/?name=<?= urlencode($_SESSION['username'] ?? 'Admin') ?>&background=0EA5E9&color=fff" class="w-8 h-8 rounded-full">
-                    <span class="text-sm font-medium text-gray-700 hidden sm:block"><?= htmlspecialchars($_SESSION['username'] ?? 'Admin') ?></span>
+                    <img src="https://ui-avatars.com/api/?name=<?= urlencode($_SESSION['username'] ?? 'User') ?>&background=0EA5E9&color=fff" class="w-8 h-8 rounded-full">
+                    <span class="text-sm font-medium text-gray-700 hidden sm:block"><?= htmlspecialchars($_SESSION['username'] ?? 'User') ?></span>
                     <a href="/logout" class="text-red-500 hover:text-red-700 ml-2" title="Logout">
                         <i data-lucide="log-out" class="w-4 h-4"></i>
                     </a>
