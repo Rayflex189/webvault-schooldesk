@@ -3,20 +3,47 @@
 ob_start();
 ?>
 
-<div class="flex justify-between items-end mb-6">
+<div class="flex justify-between items-end mb-6 gap-4">
     <div>
         <h1 class="text-2xl font-bold text-gray-800">Dashboard</h1>
         <p class="text-sm text-gray-500 mt-1">Welcome back, <?= htmlspecialchars($_SESSION['username'] ?? 'Admin') ?>! 👋</p>
     </div>
-    <button class="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-50 flex items-center gap-2 shadow-sm">
-        <i data-lucide="calendar" class="w-4 h-4"></i>
-        <?= htmlspecialchars($active_term) ?>
-        <i data-lucide="chevron-down" class="w-4 h-4 text-gray-400"></i>
-    </button>
+    
+    <!-- Interactive Term Switcher -->
+    <div class="relative" x-data="{ openTerm: false }">
+        <button @click="openTerm = !openTerm" @click.outside="openTerm = false" class="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-50 flex items-center gap-2 shadow-sm transition-colors">
+            <i data-lucide="calendar" class="w-4 h-4"></i>
+            <span class="hidden sm:inline"><?= htmlspecialchars($active_session ?? '2024/2025') ?> - </span><?= htmlspecialchars($active_term ?? 'First Term') ?>
+            <i data-lucide="chevron-down" class="w-4 h-4 text-gray-400"></i>
+        </button>
+        
+        <div x-cloak x-show="openTerm" x-transition class="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-50">
+            <div class="px-4 py-2 border-b border-gray-100 mb-2">
+                <p class="text-xs text-gray-500 font-bold uppercase">Switch Active Term</p>
+            </div>
+            <form action="/admin/settings/update-session" method="POST">
+                <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
+                <input type="hidden" name="session" value="<?= htmlspecialchars($active_session ?? '2024/2025') ?>">
+                
+                <button type="submit" name="term" value="First Term" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex justify-between items-center <?= ($active_term ?? '') == 'First Term' ? 'bg-blue-50 text-primary font-bold' : '' ?>">
+                    First Term
+                    <?php if(($active_term ?? '') == 'First Term'): ?><i data-lucide="check" class="w-4 h-4"></i><?php endif; ?>
+                </button>
+                <button type="submit" name="term" value="Second Term" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex justify-between items-center <?= ($active_term ?? '') == 'Second Term' ? 'bg-blue-50 text-primary font-bold' : '' ?>">
+                    Second Term
+                    <?php if(($active_term ?? '') == 'Second Term'): ?><i data-lucide="check" class="w-4 h-4"></i><?php endif; ?>
+                </button>
+                <button type="submit" name="term" value="Third Term" class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex justify-between items-center <?= ($active_term ?? '') == 'Third Term' ? 'bg-blue-50 text-primary font-bold' : '' ?>">
+                    Third Term
+                    <?php if(($active_term ?? '') == 'Third Term'): ?><i data-lucide="check" class="w-4 h-4"></i><?php endif; ?>
+                </button>
+            </form>
+        </div>
+    </div>
 </div>
 
-<!-- Stat Cards Grid -->
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
+<!-- Stat Cards Grid (Now 2 columns on mobile for better UI) -->
+<div class="grid grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4 mb-6">
     
     <!-- Card 1: Students -->
     <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex flex-col justify-between">
@@ -61,7 +88,7 @@ ob_start();
             <p class="text-xs text-gray-500 font-medium uppercase tracking-wider">Attendance Today</p>
             <h3 class="text-2xl font-bold text-gray-800 mt-1"><?= $stats['attendance_percentage'] ?>%</h3>
             <p class="text-xs text-gray-500 mt-2 flex items-center gap-1 font-medium">
-                Based on today's records
+                Based on records
             </p>
         </div>
     </div>
@@ -77,7 +104,7 @@ ob_start();
             <p class="text-xs text-gray-500 font-medium uppercase tracking-wider">Fees Collection</p>
             <h3 class="text-2xl font-bold text-gray-800 mt-1">₦<?= number_format($stats['fees_collected'], 2) ?></h3>
             <p class="text-xs text-green-600 mt-2 flex items-center gap-1 font-medium">
-                <i data-lucide="arrow-up-right" class="w-3 h-3"></i> <?= htmlspecialchars($active_term) ?> Total
+                <i data-lucide="arrow-up-right" class="w-3 h-3"></i> <?= htmlspecialchars($active_term ?? 'First Term') ?> Total
             </p>
         </div>
     </div>
