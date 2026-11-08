@@ -7,6 +7,7 @@ use App\Controllers\TeacherController;
 use App\Controllers\SubjectController;
 use App\Controllers\ClassController;
 use App\Controllers\TeacherAssignmentController;
+use App\Controllers\AttendanceController;
 use App\Middleware\AuthMiddleware;
 
 return [
@@ -118,6 +119,22 @@ return [
     },
     'admin/assignments/store' => function() {
         $controller = new TeacherAssignmentController();
+        $controller->store();
+    },
+
+    // ==========================================
+    // Attendance Management
+    // ==========================================
+    'admin/attendance' => function() {
+        $controller = new AttendanceController();
+        $controller->index();
+    },
+    'admin/attendance/mark' => function() {
+        $controller = new AttendanceController();
+        $controller->mark();
+    },
+    'admin/attendance/store' => function() {
+        $controller = new AttendanceController();
         $controller->store();
     }
 ];
