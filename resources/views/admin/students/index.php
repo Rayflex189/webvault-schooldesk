@@ -53,6 +53,7 @@ ob_start();
         </div>
         <select name="class" class="border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-accent bg-white text-gray-700">
             <option value="">All Classes</option>
+            <!-- We will populate this dynamically later -->
             <option value="1">JSS 1A</option>
             <option value="2">JSS 1B</option>
         </select>
@@ -117,12 +118,14 @@ ob_start();
                                 <?php endif; ?>
                             </td>
                             <td class="px-6 py-4 text-right space-x-2">
-                                <button class="text-gray-400 hover:text-primary transition-colors">
+                                <!-- View Button -->
+                                <button class="text-gray-400 hover:text-primary transition-colors" title="View Details">
                                     <i data-lucide="eye" class="w-4 h-4"></i>
                                 </button>
-                                <button class="text-gray-400 hover:text-primary transition-colors">
+                                <!-- Edit Button -->
+                                <a href="/admin/students/edit?id=<?= $student['id'] ?>" class="text-gray-400 hover:text-primary transition-colors inline-block" title="Edit Student">
                                     <i data-lucide="edit" class="w-4 h-4"></i>
-                                </button>
+                                </a>
                             </td>
                         </tr>
                     <?php endforeach; ?>
