@@ -13,6 +13,7 @@ use App\Controllers\ExamController;
 use App\Controllers\ReportCardController;
 use App\Controllers\FinanceController;
 use App\Controllers\AnnouncementController;
+use App\Controllers\TeacherDashboardController;
 use App\Middleware\AuthMiddleware;
 
 return [
@@ -201,5 +202,13 @@ return [
     'admin/announcements/store' => function() {
         $controller = new AnnouncementController();
         $controller->store();
+    },
+
+    // ==========================================
+    // Teacher Portal Routes
+    // ==========================================
+    'teacher/dashboard' => function() {
+        $controller = new TeacherDashboardController();
+        $controller->index();
     }
 ];
