@@ -5,6 +5,7 @@ use App\Controllers\AuthController;
 use App\Controllers\StudentController;
 use App\Controllers\TeacherController;
 use App\Controllers\SubjectController;
+use App\Controllers\ClassController;
 use App\Middleware\AuthMiddleware;
 
 return [
@@ -76,6 +77,22 @@ return [
     },
     'admin/subjects/store' => function() {
         $controller = new SubjectController();
+        $controller->store();
+    },
+
+    // ==========================================
+    // Class Management
+    // ==========================================
+    'admin/classes' => function() {
+        $controller = new ClassController();
+        $controller->index();
+    },
+    'admin/classes/create' => function() {
+        $controller = new ClassController();
+        $controller->create();
+    },
+    'admin/classes/store' => function() {
+        $controller = new ClassController();
         $controller->store();
     }
 ];
