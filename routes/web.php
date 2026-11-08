@@ -195,6 +195,18 @@ return [
         $controller = new TeacherAssignmentController();
         $controller->store();
     },
+    'admin/assignments/edit' => function() {
+        $controller = new TeacherAssignmentController();
+        $controller->edit();
+    },
+    'admin/assignments/update' => function() {
+        $controller = new TeacherAssignmentController();
+        $controller->update();
+    },
+    'admin/assignments/delete' => function() {
+        $controller = new TeacherAssignmentController();
+        $controller->destroy();
+    },
 
     // Admin: Attendance Management
     'admin/attendance' => function() {
