@@ -9,7 +9,6 @@ function env($key, $default = null) {
     if ($value === false) {
         return $default;
     }
-    // Convert string booleans to actual booleans
     switch (strtolower($value)) {
         case 'true':
         case '(true)':
@@ -46,7 +45,6 @@ function view($path, $data = []) {
  * Redirect to a specific path
  */
 function redirect($path) {
-    // Use relative path to avoid Codespaces URL issues
     header("Location: /" . ltrim($path, '/'));
     exit;
 }
@@ -76,4 +74,19 @@ function verify_csrf($token) {
         http_response_code(419);
         die('CSRF token mismatch.');
     }
+}
+
+/**
+ * Get global school settings (cached in memory for the duration of the request)
+ */
+function get_settings() {
+    static $settings = null;
+    
+    if ($settings === null) {
+        $pdo = \Database::getInstance();
+        $stmt = $pdo->query("SELECT * FROM school_settings WHERE id = 1");
+        $settings = $stmt->fetch();
+    }
+    
+    return $settings;
 }
