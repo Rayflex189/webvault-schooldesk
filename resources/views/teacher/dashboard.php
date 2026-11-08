@@ -57,8 +57,8 @@ ob_start();
                         <a href="/teacher/attendance?class_id=<?= $classId ?>" class="flex items-center justify-center gap-2 bg-green-50 text-green-700 hover:bg-green-100 px-3 py-2 rounded-lg text-sm font-medium transition-colors">
                             <i data-lucide="clipboard-check" class="w-4 h-4"></i> Attendance
                         </a>
-                        <a href="#" class="flex items-center justify-center gap-2 bg-blue-50 text-blue-700 hover:bg-blue-100 px-3 py-2 rounded-lg text-sm font-medium transition-colors">
-                            <i data-lucide="file-edit" class="w-4 h-4"></i> Scores
+                        <a href="/teacher/exams" class="flex items-center justify-center gap-2 bg-blue-50 text-blue-700 hover:bg-blue-100 px-3 py-2 rounded-lg text-sm font-medium transition-colors">
+    <i data-lucide="file-edit" class="w-4 h-4"></i> Scores
                         </a>
                     </div>
                 </div>
