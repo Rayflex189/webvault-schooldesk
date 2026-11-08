@@ -6,6 +6,7 @@ use App\Controllers\StudentController;
 use App\Controllers\TeacherController;
 use App\Controllers\SubjectController;
 use App\Controllers\ClassController;
+use App\Controllers\TeacherAssignmentController;
 use App\Middleware\AuthMiddleware;
 
 return [
@@ -102,5 +103,21 @@ return [
     'admin/classes/subjects/update' => function() {
         $controller = new ClassController();
         $controller->updateSubjects();
+    },
+
+    // ==========================================
+    // Teacher Assignments
+    // ==========================================
+    'admin/assignments' => function() {
+        $controller = new TeacherAssignmentController();
+        $controller->index();
+    },
+    'admin/assignments/create' => function() {
+        $controller = new TeacherAssignmentController();
+        $controller->create();
+    },
+    'admin/assignments/store' => function() {
+        $controller = new TeacherAssignmentController();
+        $controller->store();
     }
 ];
