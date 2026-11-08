@@ -24,4 +24,33 @@ class Student {
         
         return $stmt->fetchAll();
     }
+
+    /**
+     * Create a new student record
+     */
+    public function create($data) {
+        $pdo = Database::getInstance();
+        
+        $sql = "INSERT INTO students (admission_number, first_name, last_name, gender, dob, class_id) 
+                VALUES (:admission_number, :first_name, :last_name, :gender, :dob, :class_id)";
+        
+        $stmt = $pdo->prepare($sql);
+        
+        return $stmt->execute([
+            ':admission_number' => $data['admission_number'],
+            ':first_name'       => $data['first_name'],
+            ':last_name'        => $data['last_name'],
+            ':gender'           => $data['gender'],
+            ':dob'              => $data['dob'],
+            ':class_id'         => $data['class_id']
+        ]);
+    }
+    
+    /**
+     * Get all classes for the dropdown
+     */
+    public function getClasses() {
+        $pdo = Database::getInstance();
+        return $pdo->query("SELECT id, name FROM classes ORDER BY name ASC")->fetchAll();
+    }
 }
