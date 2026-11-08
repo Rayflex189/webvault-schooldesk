@@ -10,7 +10,7 @@ ob_start();
     </div>
     <button class="bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-50 flex items-center gap-2 shadow-sm">
         <i data-lucide="calendar" class="w-4 h-4"></i>
-        This Term
+        <?= htmlspecialchars($active_term) ?>
         <i data-lucide="chevron-down" class="w-4 h-4 text-gray-400"></i>
     </button>
 </div>
@@ -77,7 +77,7 @@ ob_start();
             <p class="text-xs text-gray-500 font-medium uppercase tracking-wider">Fees Collection</p>
             <h3 class="text-2xl font-bold text-gray-800 mt-1">₦<?= number_format($stats['fees_collected'], 2) ?></h3>
             <p class="text-xs text-green-600 mt-2 flex items-center gap-1 font-medium">
-                <i data-lucide="arrow-up-right" class="w-3 h-3"></i> First Term Total
+                <i data-lucide="arrow-up-right" class="w-3 h-3"></i> <?= htmlspecialchars($active_term) ?> Total
             </p>
         </div>
     </div>
@@ -100,17 +100,17 @@ ob_start();
 
 </div>
 
-<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-    <!-- Chart Area Placeholder -->
-    <div class="lg:col-span-2 bg-white rounded-xl border border-gray-200 shadow-sm p-6 h-96 flex flex-col">
+<!-- First Row: Chart & Activities -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+    
+    <!-- Chart Area -->
+    <div class="lg:col-span-2 bg-white rounded-xl border border-gray-200 shadow-sm p-6 flex flex-col">
         <div class="flex justify-between items-center mb-4">
-            <h2 class="text-lg font-bold text-gray-800">Attendance Overview</h2>
+            <h2 class="text-lg font-bold text-gray-800">Attendance Overview (Last 7 Days)</h2>
         </div>
-        <div class="flex-1 bg-gray-50 rounded-lg border-2 border-dashed border-gray-200 flex items-center justify-center text-gray-400">
-            <div class="text-center">
-                <i data-lucide="bar-chart-3" class="w-10 h-10 mx-auto mb-2 text-gray-300"></i>
-                <p class="text-sm">Chart.js will render here in a future update</p>
-            </div>
+        <!-- Canvas for Line Chart -->
+        <div class="flex-1 relative w-full h-72">
+            <canvas id="attendanceChart"></canvas>
         </div>
     </div>
 
@@ -142,6 +142,99 @@ ob_start();
         </div>
     </div>
 </div>
+
+<!-- Second Row of Charts -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Student Distribution Bar Chart -->
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 flex flex-col">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-lg font-bold text-gray-800">Student Distribution by Class</h2>
+        </div>
+        <!-- Canvas for Bar Chart -->
+        <div class="flex-1 relative w-full h-72">
+            <canvas id="studentsChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // --- 1. Attendance Line Chart ---
+    const attCtx = document.getElementById('attendanceChart').getContext('2d');
+    
+    // Create gradient for present line
+    let gradientPresent = attCtx.createLinearGradient(0, 0, 0, 300);
+    gradientPresent.addColorStop(0, 'rgba(14, 165, 233, 0.5)'); // Sky blue
+    gradientPresent.addColorStop(1, 'rgba(14, 165, 233, 0.0)');
+
+    new Chart(attCtx, {
+        type: 'line',
+        data: {
+            labels: <?= $chart_attendance_labels ?>,
+            datasets: [
+                {
+                    label: 'Present',
+                    data: <?= $chart_attendance_present ?>,
+                    borderColor: '#0EA5E9',
+                    backgroundColor: gradientPresent,
+                    borderWidth: 2,
+                    pointBackgroundColor: '#0EA5E9',
+                    fill: true,
+                    tension: 0.4 // Smooth curves
+                },
+                {
+                    label: 'Absent',
+                    data: <?= $chart_attendance_absent ?>,
+                    borderColor: '#EF4444',
+                    backgroundColor: 'transparent',
+                    borderWidth: 2,
+                    borderDash: [5, 5],
+                    pointBackgroundColor: '#EF4444',
+                    tension: 0.4
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'top', labels: { usePointStyle: true, boxWidth: 8 } }
+            },
+            scales: {
+                y: { beginAtZero: true, grid: { borderDash: [2, 4], color: '#E2E8F0' } },
+                x: { grid: { display: false } }
+            }
+        }
+    });
+
+    // --- 2. Student Distribution Bar Chart ---
+    const stuCtx = document.getElementById('studentsChart').getContext('2d');
+    new Chart(stuCtx, {
+        type: 'bar',
+        data: {
+            labels: <?= $chart_students_labels ?>,
+            datasets: [{
+                label: 'Number of Students',
+                data: <?= $chart_students_data ?>,
+                backgroundColor: '#1E3A8A', // Navy
+                borderRadius: 6,
+                barThickness: 40
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                y: { beginAtZero: true, ticks: { stepSize: 1 }, grid: { borderDash: [2, 4], color: '#E2E8F0' } },
+                x: { grid: { display: false } }
+            }
+        }
+    });
+</script>
 
 <?php
 // Render the content into the layout
