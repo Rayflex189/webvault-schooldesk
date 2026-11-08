@@ -16,6 +16,7 @@ use App\Controllers\AnnouncementController;
 use App\Controllers\TeacherDashboardController;
 use App\Controllers\TeacherAttendanceController;
 use App\Controllers\TeacherExamController;
+use App\Controllers\ParentDashboardController;
 
 return [
     // ==========================================
@@ -215,5 +216,13 @@ return [
     'teacher/exams/store' => function() {
         $controller = new TeacherExamController();
         $controller->store();
+    },
+
+    // ==========================================
+    // Parent Portal Routes
+    // ==========================================
+    'parent/dashboard' => function() {
+        $controller = new ParentDashboardController();
+        $controller->index();
     }
 ];
