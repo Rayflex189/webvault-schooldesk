@@ -76,7 +76,11 @@
                 </a>
                 <a href="/admin/teachers" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/admin/teachers') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
                     <i data-lucide="user-check" class="w-5 h-5"></i> Teachers
-                </a>
+                </a> 
+
+            <a href="/admin/parents" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/admin/parents') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
+    <i data-lucide="users-2" class="w-5 h-5"></i> Parents
+            </a>
                 
                 <p class="px-3 text-xs font-semibold text-blue-300 uppercase tracking-wider mb-2 mt-6">Academics</p>
                 <a href="/admin/classes" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/admin/classes') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
