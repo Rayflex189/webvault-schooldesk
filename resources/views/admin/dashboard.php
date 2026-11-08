@@ -82,18 +82,18 @@ ob_start();
         </div>
     </div>
 
-    <!-- Card 5: Classes -->
+    <!-- Card 5: Parents -->
     <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex flex-col justify-between">
         <div class="flex items-start justify-between">
             <div class="p-2 bg-purple-50 text-purple-600 rounded-lg">
-                <i data-lucide="school" class="w-5 h-5"></i>
+                <i data-lucide="users-2" class="w-5 h-5"></i>
             </div>
         </div>
         <div class="mt-4">
-            <p class="text-xs text-gray-500 font-medium uppercase tracking-wider">Total Classes</p>
-            <h3 class="text-2xl font-bold text-gray-800 mt-1"><?= number_format($stats['classes']) ?></h3>
-            <p class="text-xs text-gray-500 mt-2 flex items-center gap-1 font-medium">
-                Across all levels
+            <p class="text-xs text-gray-500 font-medium uppercase tracking-wider">Parents</p>
+            <h3 class="text-2xl font-bold text-gray-800 mt-1"><?= number_format($stats['parents']) ?></h3>
+            <p class="text-xs text-green-600 mt-2 flex items-center gap-1 font-medium">
+                <i data-lucide="arrow-up-right" class="w-3 h-3"></i> Registered
             </p>
         </div>
     </div>
