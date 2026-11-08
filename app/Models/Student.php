@@ -25,6 +25,16 @@ class Student {
     }
 
     /**
+     * Fetch a single student by ID
+     */
+    public function find($id) {
+        $pdo = Database::getInstance();
+        $stmt = $pdo->prepare("SELECT * FROM students WHERE id = ?");
+        $stmt->execute([$id]);
+        return $stmt->fetch();
+    }
+
+    /**
      * Create a new student record and their corresponding user account
      */
     public function create($data) {
@@ -35,7 +45,6 @@ class Student {
 
             // 1. Create the User Account (Role ID 4 = Student)
             $passwordHash = password_hash('password123', PASSWORD_DEFAULT);
-            // Use admission number as the username/email for login
             $username = strtolower(str_replace('/', '', $data['admission_number'])); 
             
             $userSql = "INSERT INTO users (role_id, username, email, password_hash) 
@@ -43,7 +52,7 @@ class Student {
             $userStmt = $pdo->prepare($userSql);
             $userStmt->execute([
                 ':username' => $username,
-                ':email'    => $username . '@student.school.com', // Dummy email
+                ':email'    => $username . '@student.school.com',
                 ':password_hash' => $passwordHash
             ]);
             
@@ -70,6 +79,26 @@ class Student {
             $pdo->rollBack();
             return false;
         }
+    }
+
+    /**
+     * Update an existing student record
+     */
+    public function update($id, $data) {
+        $pdo = Database::getInstance();
+        $sql = "UPDATE students 
+                SET first_name = :first_name, last_name = :last_name, gender = :gender, dob = :dob, class_id = :class_id, status = :status 
+                WHERE id = :id";
+        $stmt = $pdo->prepare($sql);
+        return $stmt->execute([
+            ':first_name' => $data['first_name'],
+            ':last_name'  => $data['last_name'],
+            ':gender'     => $data['gender'],
+            ':dob'        => $data['dob'],
+            ':class_id'   => $data['class_id'],
+            ':status'     => $data['status'],
+            ':id'         => $id
+        ]);
     }
     
     /**
