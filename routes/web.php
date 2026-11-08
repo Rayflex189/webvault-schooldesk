@@ -26,7 +26,8 @@ return [
     // Public Routes
     // ==========================================
     '/' => function() {
-        redirect('login');
+        // Load the premium landing page
+        require_once __DIR__ . '/../resources/views/landing.php';
     },
     'login' => function() {
         $auth = new AuthController();
