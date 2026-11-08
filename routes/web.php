@@ -2,6 +2,7 @@
 // routes/web.php
 
 use App\Controllers\AuthController;
+use App\Controllers\DashboardController;
 use App\Controllers\StudentController;
 use App\Controllers\TeacherController;
 use App\Controllers\SubjectController;
@@ -33,8 +34,8 @@ return [
     // Protected Admin Routes
     // ==========================================
     'admin/dashboard' => function() {
-        AuthMiddleware::adminOnly();
-        view('admin.dashboard');
+        $controller = new DashboardController();
+        $controller->index();
     },
     
     // ==========================================
