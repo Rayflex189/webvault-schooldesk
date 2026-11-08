@@ -18,6 +18,7 @@ use App\Controllers\TeacherAttendanceController;
 use App\Controllers\TeacherExamController;
 use App\Controllers\ParentDashboardController;
 use App\Controllers\StudentDashboardController;
+use App\Controllers\SettingController;
 
 return [
     // ==========================================
@@ -185,6 +186,24 @@ return [
     'admin/announcements/store' => function() {
         $controller = new AnnouncementController();
         $controller->store();
+    },
+
+    // Admin: Settings
+    'admin/settings' => function() {
+        $controller = new SettingController();
+        $controller->index();
+    },
+    'admin/settings/update-school' => function() {
+        $controller = new SettingController();
+        $controller->updateSchoolInfo();
+    },
+    'admin/settings/update-session' => function() {
+        $controller = new SettingController();
+        $controller->updateCurrentSession();
+    },
+    'admin/settings/create-session' => function() {
+        $controller = new SettingController();
+        $controller->createSession();
     },
 
     // ==========================================
