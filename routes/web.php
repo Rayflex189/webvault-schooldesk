@@ -2,6 +2,7 @@
 // routes/web.php
 
 use App\Controllers\AuthController;
+use App\Controllers\StudentController;
 use App\Middleware\AuthMiddleware;
 
 return [
@@ -20,10 +21,13 @@ return [
 
     // Protected Admin Routes
     'admin/dashboard' => function() {
-        // Enforce authentication and admin role
         AuthMiddleware::adminOnly();
-        
-        // Render dashboard
         view('admin.dashboard');
+    },
+    
+    // Student Management Routes
+    'admin/students' => function() {
+        $controller = new StudentController();
+        $controller->index();
     }
 ];
