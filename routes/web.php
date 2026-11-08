@@ -94,5 +94,13 @@ return [
     'admin/classes/store' => function() {
         $controller = new ClassController();
         $controller->store();
+    },
+    'admin/classes/subjects' => function() {
+        $controller = new ClassController();
+        $controller->manageSubjects();
+    },
+    'admin/classes/subjects/update' => function() {
+        $controller = new ClassController();
+        $controller->updateSubjects();
     }
 ];
