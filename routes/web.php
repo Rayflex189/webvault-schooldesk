@@ -21,6 +21,7 @@ use App\Controllers\TeacherExamController;
 use App\Controllers\ParentDashboardController;
 use App\Controllers\StudentDashboardController;
 use App\Controllers\SettingController;
+use App\Controllers\ProfileController;
 
 return [
     // ==========================================
@@ -48,6 +49,18 @@ return [
     },
 
     // ==========================================
+    // Protected User Routes (All Roles)
+    // ==========================================
+    'profile' => function() {
+        $controller = new ProfileController();
+        $controller->index();
+    },
+    'profile/update' => function() {
+        $controller = new ProfileController();
+        $controller->updatePassword();
+    },
+
+    // ==========================================
     // Protected Admin Routes
     // ==========================================
     'admin/dashboard' => function() {
@@ -67,6 +80,14 @@ return [
     'admin/students/store' => function() {
         $controller = new StudentController();
         $controller->store();
+    },
+    'admin/students/edit' => function() {
+        $controller = new StudentController();
+        $controller->edit();
+    },
+    'admin/students/update' => function() {
+        $controller = new StudentController();
+        $controller->update();
     },
 
     // Admin: Teacher Management
