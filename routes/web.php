@@ -12,6 +12,7 @@ use App\Controllers\AttendanceController;
 use App\Controllers\ExamController;
 use App\Controllers\ReportCardController;
 use App\Controllers\FinanceController;
+use App\Controllers\AnnouncementController;
 use App\Middleware\AuthMiddleware;
 
 return [
@@ -183,6 +184,22 @@ return [
     },
     'admin/finance/store' => function() {
         $controller = new FinanceController();
+        $controller->store();
+    },
+
+    // ==========================================
+    // Announcements
+    // ==========================================
+    'admin/announcements' => function() {
+        $controller = new AnnouncementController();
+        $controller->index();
+    },
+    'admin/announcements/create' => function() {
+        $controller = new AnnouncementController();
+        $controller->create();
+    },
+    'admin/announcements/store' => function() {
+        $controller = new AnnouncementController();
         $controller->store();
     }
 ];
