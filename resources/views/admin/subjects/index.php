@@ -58,9 +58,22 @@ ob_start();
                                 </span>
                             </td>
                             <td class="px-6 py-4 font-medium text-gray-800"><?= e($subject['name']) ?></td>
-                            <td class="px-6 py-4 text-right space-x-2">
-                                <button class="text-gray-400 hover:text-primary transition-colors"><i data-lucide="edit" class="w-4 h-4"></i></button>
-                                <button class="text-gray-400 hover:text-red-500 transition-colors"><i data-lucide="trash" class="w-4 h-4"></i></button>
+                            
+                            <!-- Updated Actions Column -->
+                            <td class="px-6 py-4 text-right space-x-3">
+                                <!-- Edit Button -->
+                                <a href="/admin/subjects/edit?id=<?= $subject['id'] ?>" class="text-gray-400 hover:text-primary transition-colors inline-block" title="Edit Subject">
+                                    <i data-lucide="edit" class="w-4 h-4"></i>
+                                </a>
+                                
+                                <!-- Delete Form -->
+                                <form action="/admin/subjects/delete" method="POST" class="inline-block" onsubmit="return confirm('Are you sure you want to delete this subject? This action cannot be undone.');">
+                                    <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
+                                    <input type="hidden" name="id" value="<?= $subject['id'] ?>">
+                                    <button type="submit" class="text-gray-400 hover:text-red-500 transition-colors" title="Delete Subject">
+                                        <i data-lucide="trash" class="w-4 h-4"></i>
+                                    </button>
+                                </form>
                             </td>
                         </tr>
                     <?php endforeach; ?>
