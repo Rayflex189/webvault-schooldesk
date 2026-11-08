@@ -14,19 +14,26 @@ class Finance {
     public function getFeeLedger($session, $term) {
         $pdo = Database::getInstance();
         
+        // We use unique parameter names (session1, session2) to avoid PDO conflicts
         $sql = "SELECT s.id, s.first_name, s.last_name, s.admission_number, c.name AS class_name,
                        COALESCE(f.amount, 0) AS expected_fee,
                        COALESCE(SUM(p.amount), 0) AS total_paid
                 FROM students s
                 JOIN classes c ON s.class_id = c.id
-                LEFT JOIN fee_structures f ON s.class_id = f.class_id AND f.session = :session AND f.term = :term
-                LEFT JOIN payments p ON s.id = p.student_id AND p.session = :session AND p.term = :term
+                LEFT JOIN fee_structures f ON s.class_id = f.class_id AND f.session = :session1 AND f.term = :term1
+                LEFT JOIN payments p ON s.id = p.student_id AND p.session = :session2 AND p.term = :term2
                 WHERE s.status = 'active'
                 GROUP BY s.id
                 ORDER BY c.name ASC, s.first_name ASC";
                 
         $stmt = $pdo->prepare($sql);
-        $stmt->execute([':session' => $session, ':term' => $term]);
+        $stmt->execute([
+            ':session1' => $session, 
+            ':term1'    => $term,
+            ':session2' => $session,
+            ':term2'    => $term
+        ]);
+        
         return $stmt->fetchAll();
     }
 
@@ -36,6 +43,7 @@ class Finance {
     public function getStudentBalance($studentId, $session, $term) {
         $pdo = Database::getInstance();
         
+        // Positional parameters (?) work fine multiple times, so this one is safe
         $sql = "SELECT 
                     (SELECT amount FROM fee_structures f JOIN students s ON f.class_id = s.class_id WHERE s.id = ? AND f.session = ? AND f.term = ?) AS expected,
                     (SELECT SUM(amount) FROM payments WHERE student_id = ? AND session = ? AND term = ?) AS paid";
