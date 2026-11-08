@@ -6,20 +6,31 @@ ob_start();
 <!-- Flash Messages -->
 <?php if(isset($_SESSION['success'])): ?>
     <div class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-6 flex items-center justify-between text-sm shadow-sm">
-        <div class="flex items-center gap-2"><i data-lucide="check-circle" class="w-4 h-4"></i><?= e($_SESSION['success']) ?></div>
-        <button onclick="this.parentElement.remove()" class="text-green-500 hover:text-green-700"><i data-lucide="x" class="w-4 h-4"></i></button>
+        <div class="flex items-center gap-2">
+            <i data-lucide="check-circle" class="w-4 h-4"></i>
+            <?= e($_SESSION['success']) ?>
+        </div>
+        <button onclick="this.parentElement.remove()" class="text-green-500 hover:text-green-700">
+            <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
     </div>
     <?php unset($_SESSION['success']); ?>
 <?php endif; ?>
 
 <?php if(isset($_SESSION['error'])): ?>
     <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6 flex items-center justify-between text-sm shadow-sm">
-        <div class="flex items-center gap-2"><i data-lucide="alert-circle" class="w-4 h-4"></i><?= e($_SESSION['error']) ?></div>
-        <button onclick="this.parentElement.remove()" class="text-red-500 hover:text-red-700"><i data-lucide="x" class="w-4 h-4"></i></button>
+        <div class="flex items-center gap-2">
+            <i data-lucide="alert-circle" class="w-4 h-4"></i>
+            <?= e($_SESSION['error']) ?>
+        </div>
+        <button onclick="this.parentElement.remove()" class="text-red-500 hover:text-red-700">
+            <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
     </div>
     <?php unset($_SESSION['error']); ?>
 <?php endif; ?>
 
+<!-- Page Header -->
 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
     <div>
         <h1 class="text-2xl font-bold text-gray-800">Subjects</h1>
@@ -31,6 +42,7 @@ ob_start();
     </a>
 </div>
 
+<!-- Data Table -->
 <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
     <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse">
@@ -59,7 +71,7 @@ ob_start();
                             </td>
                             <td class="px-6 py-4 font-medium text-gray-800"><?= e($subject['name']) ?></td>
                             
-                            <!-- Updated Actions Column -->
+                            <!-- Actions Column -->
                             <td class="px-6 py-4 text-right space-x-3">
                                 <!-- Edit Button -->
                                 <a href="/admin/subjects/edit?id=<?= $subject['id'] ?>" class="text-gray-400 hover:text-primary transition-colors inline-block" title="Edit Subject">
