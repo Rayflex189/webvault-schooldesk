@@ -72,10 +72,22 @@ ob_start();
                                     <?= e($item['class_name']) ?>
                                 </span>
                             </td>
-                            <td class="px-6 py-4 text-right">
-                                <button class="text-gray-400 hover:text-red-500 transition-colors" title="Remove Assignment">
-                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
-                                </button>
+                            
+                            <!-- Updated Actions Column -->
+                            <td class="px-6 py-4 text-right space-x-3">
+                                <!-- Edit Button -->
+                                <a href="/admin/assignments/edit?id=<?= $item['id'] ?>" class="text-gray-400 hover:text-primary transition-colors inline-block" title="Edit Assignment">
+                                    <i data-lucide="edit" class="w-4 h-4"></i>
+                                </a>
+                                
+                                <!-- Delete Form -->
+                                <form action="/admin/assignments/delete" method="POST" class="inline-block" onsubmit="return confirm('Are you sure you want to remove this assignment?');">
+                                    <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
+                                    <input type="hidden" name="id" value="<?= $item['id'] ?>">
+                                    <button type="submit" class="text-gray-400 hover:text-red-500 transition-colors" title="Delete Assignment">
+                                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                    </button>
+                                </form>
                             </td>
                         </tr>
                     <?php endforeach; ?>
