@@ -14,6 +14,8 @@ class AuthController {
                 redirect('admin/dashboard');
             } elseif ($_SESSION['role_id'] == 2) {
                 redirect('teacher/dashboard');
+            } elseif ($_SESSION['role_id'] == 3) {
+                redirect('parent/dashboard');
             }
         }
 
@@ -50,8 +52,10 @@ class AuthController {
                     redirect('admin/dashboard');
                 } elseif ($user['role_id'] == 2) {
                     redirect('teacher/dashboard');
+                } elseif ($user['role_id'] == 3) {
+                    redirect('parent/dashboard');
                 } else {
-                    // Fallback for parents/students if we add their portals later
+                    // Fallback for unknown roles
                     redirect('login'); 
                 }
             } else {
