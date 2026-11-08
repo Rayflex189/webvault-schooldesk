@@ -5,6 +5,7 @@ use App\Controllers\AuthController;
 use App\Controllers\DashboardController;
 use App\Controllers\StudentController;
 use App\Controllers\TeacherController;
+use App\Controllers\ParentController;
 use App\Controllers\SubjectController;
 use App\Controllers\ClassController;
 use App\Controllers\TeacherAssignmentController;
@@ -69,6 +70,20 @@ return [
     },
     'admin/teachers/store' => function() {
         $controller = new TeacherController();
+        $controller->store();
+    },
+
+    // Admin: Parent Management
+    'admin/parents' => function() {
+        $controller = new ParentController();
+        $controller->index();
+    },
+    'admin/parents/create' => function() {
+        $controller = new ParentController();
+        $controller->create();
+    },
+    'admin/parents/store' => function() {
+        $controller = new ParentController();
         $controller->store();
     },
 
