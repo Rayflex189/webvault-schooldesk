@@ -78,6 +78,12 @@
     <i data-lucide="book" class="w-5 h-5"></i>
     Subjects
 </a>
+
+<!-- Classes Link -->
+<a href="/admin/classes" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/admin/classes') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
+    <i data-lucide="school" class="w-5 h-5"></i>
+    Classes
+</a>
             
             <a href="#" class="flex items-center gap-3 px-3 py-2.5 text-blue-200 hover:bg-blue-800/50 hover:text-white rounded-lg font-medium transition-colors">
                 <i data-lucide="calendar" class="w-5 h-5"></i>
