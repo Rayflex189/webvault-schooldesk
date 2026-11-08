@@ -14,6 +14,7 @@ use App\Controllers\ReportCardController;
 use App\Controllers\FinanceController;
 use App\Controllers\AnnouncementController;
 use App\Controllers\TeacherDashboardController;
+use App\Controllers\TeacherAttendanceController;
 use App\Middleware\AuthMiddleware;
 
 return [
@@ -129,7 +130,7 @@ return [
     },
 
     // ==========================================
-    // Attendance Management
+    // Attendance Management (Admin)
     // ==========================================
     'admin/attendance' => function() {
         $controller = new AttendanceController();
@@ -145,7 +146,7 @@ return [
     },
 
     // ==========================================
-    // Exams & Results
+    // Exams & Results (Admin)
     // ==========================================
     'admin/exams' => function() {
         $controller = new ExamController();
@@ -161,7 +162,7 @@ return [
     },
 
     // ==========================================
-    // Report Cards
+    // Report Cards (Admin)
     // ==========================================
     'admin/reports' => function() {
         $controller = new ReportCardController();
@@ -173,7 +174,7 @@ return [
     },
 
     // ==========================================
-    // Finance & Fees
+    // Finance & Fees (Admin)
     // ==========================================
     'admin/finance' => function() {
         $controller = new FinanceController();
@@ -189,7 +190,7 @@ return [
     },
 
     // ==========================================
-    // Announcements
+    // Announcements (Admin)
     // ==========================================
     'admin/announcements' => function() {
         $controller = new AnnouncementController();
@@ -210,5 +211,15 @@ return [
     'teacher/dashboard' => function() {
         $controller = new TeacherDashboardController();
         $controller->index();
+    },
+    
+    // Teacher Attendance
+    'teacher/attendance' => function() {
+        $controller = new TeacherAttendanceController();
+        $controller->mark();
+    },
+    'teacher/attendance/store' => function() {
+        $controller = new TeacherAttendanceController();
+        $controller->store();
     }
 ];
