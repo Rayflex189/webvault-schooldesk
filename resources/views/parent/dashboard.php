@@ -35,8 +35,8 @@ ob_start();
                         <a href="/parent/report-card?student_id=<?= $child['id'] ?>" class="flex items-center justify-center gap-2 bg-gray-50 hover:bg-gray-100 text-gray-700 px-4 py-3 rounded-lg text-sm font-medium transition-colors">
                             <i data-lucide="printer" class="w-4 h-4"></i> View Report Card
                         </a>
-                        <a href="#" class="flex items-center justify-center gap-2 bg-gray-50 hover:bg-gray-100 text-gray-700 px-4 py-3 rounded-lg text-sm font-medium transition-colors">
-                            <i data-lucide="wallet" class="w-4 h-4"></i> Fee Status
+                        <a href="/parent/fees?student_id=<?= $child['id'] ?>" class="flex items-center justify-center gap-2 bg-gray-50 hover:bg-gray-100 text-gray-700 px-4 py-3 rounded-lg text-sm font-medium transition-colors">
+    <i data-lucide="wallet" class="w-4 h-4"></i> Fee Status
                         </a>
                     </div>
                 </div>
