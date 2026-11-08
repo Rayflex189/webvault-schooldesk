@@ -1,6 +1,7 @@
 <?php
 // routes/web.php
 
+use App\Controllers\LandingController;
 use App\Controllers\AuthController;
 use App\Controllers\DashboardController;
 use App\Controllers\StudentController;
@@ -23,11 +24,19 @@ use App\Controllers\SettingController;
 
 return [
     // ==========================================
-    // Public Routes
+    // Public Routes (Landing Page & Auth)
     // ==========================================
     '/' => function() {
-        // Load the premium landing page
-        require_once __DIR__ . '/../resources/views/landing.php';
+        $controller = new LandingController();
+        $controller->index();
+    },
+    'submit-testimonial' => function() {
+        $controller = new LandingController();
+        $controller->submitTestimonial();
+    },
+    'submit-contact' => function() {
+        $controller = new LandingController();
+        $controller->submitContact();
     },
     'login' => function() {
         $auth = new AuthController();
