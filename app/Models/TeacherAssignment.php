@@ -101,4 +101,20 @@ class TeacherAssignment {
         
         return $stmt->fetchColumn() > 0;
     }
+
+    /**
+     * Check if a teacher is assigned to a specific class AND subject
+     */
+    public function isTeacherAssigned($userId, $classId, $subjectId) {
+        $pdo = Database::getInstance();
+        
+        $sql = "SELECT COUNT(*) FROM teacher_assignments ta
+                JOIN teachers t ON ta.teacher_id = t.id
+                WHERE t.user_id = ? AND ta.class_id = ? AND ta.subject_id = ?";
+                
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([$userId, $classId, $subjectId]);
+        
+        return $stmt->fetchColumn() > 0;
+    }
 }
