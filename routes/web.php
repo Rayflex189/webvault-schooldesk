@@ -10,6 +10,7 @@ use App\Controllers\TeacherAssignmentController;
 use App\Controllers\AttendanceController;
 use App\Controllers\ExamController;
 use App\Controllers\ReportCardController;
+use App\Controllers\FinanceController;
 use App\Middleware\AuthMiddleware;
 
 return [
@@ -166,5 +167,21 @@ return [
     'admin/reports/generate' => function() {
         $controller = new ReportCardController();
         $controller->generate();
+    },
+
+    // ==========================================
+    // Finance & Fees
+    // ==========================================
+    'admin/finance' => function() {
+        $controller = new FinanceController();
+        $controller->index();
+    },
+    'admin/finance/create' => function() {
+        $controller = new FinanceController();
+        $controller->create();
+    },
+    'admin/finance/store' => function() {
+        $controller = new FinanceController();
+        $controller->store();
     }
 ];
