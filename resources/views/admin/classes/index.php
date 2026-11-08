@@ -54,10 +54,15 @@ ob_start();
                         <tr class="hover:bg-gray-50 transition-colors">
                             <td class="px-6 py-4 font-medium text-gray-900"><?= e($class['name']) ?></td>
                             <td class="px-6 py-4 text-gray-600"><?= e($class['capacity']) ?> Students</td>
+                            
+                            <!-- THIS IS WHERE THAT CODE BELONGS -->
                             <td class="px-6 py-4 text-right space-x-2">
+                                <a href="/admin/classes/subjects?id=<?= $class['id'] ?>" class="inline-flex items-center gap-1 text-sm text-accent hover:text-blue-700 font-medium transition-colors mr-2">
+                                    <i data-lucide="book-open" class="w-4 h-4"></i> Subjects
+                                </a>
                                 <button class="text-gray-400 hover:text-primary transition-colors"><i data-lucide="edit" class="w-4 h-4"></i></button>
-                                <button class="text-gray-400 hover:text-red-500 transition-colors"><i data-lucide="trash" class="w-4 h-4"></i></button>
                             </td>
+                            
                         </tr>
                     <?php endforeach; ?>
                 <?php endif; ?>
