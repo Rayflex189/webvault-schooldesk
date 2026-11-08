@@ -71,7 +71,13 @@
             <a href="/admin/teachers" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/admin/teachers') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
                 <i data-lucide="user-check" class="w-5 h-5"></i>
                 Teachers
-            </a>
+            </a> 
+
+            <!-- Subjects Link -->
+<a href="/admin/subjects" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/admin/subjects') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
+    <i data-lucide="book" class="w-5 h-5"></i>
+    Subjects
+</a>
             
             <a href="#" class="flex items-center gap-3 px-3 py-2.5 text-blue-200 hover:bg-blue-800/50 hover:text-white rounded-lg font-medium transition-colors">
                 <i data-lucide="calendar" class="w-5 h-5"></i>
