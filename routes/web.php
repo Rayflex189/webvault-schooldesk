@@ -29,5 +29,13 @@ return [
     'admin/students' => function() {
         $controller = new StudentController();
         $controller->index();
+    },
+    'admin/students/create' => function() {
+        $controller = new StudentController();
+        $controller->create();
+    },
+    'admin/students/store' => function() {
+        $controller = new StudentController();
+        $controller->store();
     }
 ];
