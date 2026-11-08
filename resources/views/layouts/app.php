@@ -188,7 +188,7 @@ $settings = get_settings();
             <!-- Right Side: Dropdowns -->
             <div class="flex items-center gap-4 text-gray-500" x-data="{ openSessions: false, openNotifications: false, openUser: false }">
                 
-                <!-- Session Dropdown -->
+                <!-- Session Dropdown (Desktop Only) -->
                 <div class="relative hidden lg:block">
                     <button @click="openSessions = !openSessions" @click.outside="openSessions = false" class="flex items-center gap-2 bg-blue-50 text-blue-700 px-3 py-1.5 rounded-lg border border-blue-100 text-sm font-medium hover:bg-blue-100 transition">
                         <i data-lucide="calendar" class="w-4 h-4"></i>
@@ -222,7 +222,9 @@ $settings = get_settings();
                         <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
                     </button>
                     
-                    <div x-cloak x-show="openNotifications" x-transition class="absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-50">
+                    <!-- Fixed width on mobile to prevent overflowing left -->
+                    <div x-cloak x-show="openNotifications" x-transition 
+                         class="fixed top-[70px] left-4 right-4 sm:absolute sm:top-full sm:left-auto sm:right-0 sm:mt-2 sm:w-80 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-50">
                         <div class="px-4 py-2 border-b border-gray-100 mb-2 flex justify-between items-center">
                             <p class="text-xs text-gray-500 font-bold uppercase">Latest Announcements</p>
                         </div>
@@ -256,7 +258,9 @@ $settings = get_settings();
                         <i data-lucide="chevron-down" class="w-4 h-4 hidden sm:block"></i>
                     </button>
                     
-                    <div x-cloak x-show="openUser" x-transition class="absolute right-0 top-12 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-50">
+                    <!-- Fixed width on mobile to prevent overflowing -->
+                    <div x-cloak x-show="openUser" x-transition 
+                         class="fixed top-[70px] left-4 right-4 sm:absolute sm:top-full sm:left-auto sm:right-0 sm:mt-2 sm:w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-50">
                         <a href="/profile" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2">
                             <i data-lucide="user" class="w-4 h-4 text-gray-400"></i> My Profile
                         </a>
