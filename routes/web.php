@@ -8,6 +8,7 @@ use App\Controllers\SubjectController;
 use App\Controllers\ClassController;
 use App\Controllers\TeacherAssignmentController;
 use App\Controllers\AttendanceController;
+use App\Controllers\ExamController;
 use App\Middleware\AuthMiddleware;
 
 return [
@@ -135,6 +136,22 @@ return [
     },
     'admin/attendance/store' => function() {
         $controller = new AttendanceController();
+        $controller->store();
+    },
+
+    // ==========================================
+    // Exams & Results
+    // ==========================================
+    'admin/exams' => function() {
+        $controller = new ExamController();
+        $controller->index();
+    },
+    'admin/exams/entry' => function() {
+        $controller = new ExamController();
+        $controller->entry();
+    },
+    'admin/exams/store' => function() {
+        $controller = new ExamController();
         $controller->store();
     }
 ];
