@@ -3,6 +3,33 @@
 ob_start();
 ?>
 
+<!-- Flash Messages -->
+<?php if(isset($_SESSION['success'])): ?>
+    <div class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-6 flex items-center justify-between text-sm shadow-sm transition-all">
+        <div class="flex items-center gap-2">
+            <i data-lucide="check-circle" class="w-4 h-4"></i>
+            <?= e($_SESSION['success']) ?>
+        </div>
+        <button onclick="this.parentElement.remove()" class="text-green-500 hover:text-green-700">
+            <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+    </div>
+    <?php unset($_SESSION['success']); ?>
+<?php endif; ?>
+
+<?php if(isset($_SESSION['error'])): ?>
+    <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6 flex items-center justify-between text-sm shadow-sm transition-all">
+        <div class="flex items-center gap-2">
+            <i data-lucide="alert-circle" class="w-4 h-4"></i>
+            <?= e($_SESSION['error']) ?>
+        </div>
+        <button onclick="this.parentElement.remove()" class="text-red-500 hover:text-red-700">
+            <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+    </div>
+    <?php unset($_SESSION['error']); ?>
+<?php endif; ?>
+
 <!-- Page Header -->
 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
     <div>
@@ -24,12 +51,12 @@ ob_start();
             <input type="text" name="search" placeholder="Search by name or admission number..." 
                 class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:border-accent text-sm">
         </div>
-        <select name="class" class="border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-accent">
+        <select name="class" class="border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-accent bg-white text-gray-700">
             <option value="">All Classes</option>
             <option value="1">JSS 1A</option>
             <option value="2">JSS 1B</option>
         </select>
-        <button type="submit" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-6 py-2 rounded-lg text-sm font-medium transition-colors">
+        <button type="submit" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-6 py-2 rounded-lg text-sm font-medium transition-colors border border-gray-200">
             Filter
         </button>
     </form>
@@ -64,12 +91,11 @@ ob_start();
                             <td class="px-6 py-4 font-medium text-gray-900"><?= e($student['admission_number']) ?></td>
                             <td class="px-6 py-4">
                                 <div class="flex items-center gap-3">
-                                    <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-xs">
+                                    <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-xs shrink-0">
                                         <?= strtoupper(substr($student['first_name'], 0, 1) . substr($student['last_name'], 0, 1)) ?>
                                     </div>
                                     <div>
                                         <p class="font-medium text-gray-900"><?= e($student['first_name'] . ' ' . $student['last_name']) ?></p>
-                                        <p class="text-xs text-gray-500"><?= e($student['gender']) ?></p>
                                     </div>
                                 </div>
                             </td>
