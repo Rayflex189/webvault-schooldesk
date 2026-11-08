@@ -1,9 +1,24 @@
+<?php
+// Fetch global school settings so the landing page is fully dynamic
+$settings = get_settings();
+$schoolName = $settings['school_name'] ?? 'WebVault SchoolDesk';
+$schoolMotto = $settings['motto'] ?? 'Knowledge is Power';
+$schoolEmail = $settings['email'] ?? 'info@school.com';
+$schoolPhone = $settings['phone'] ?? '+234 800 000 0000';
+$schoolAddress = $settings['address'] ?? '123 Education Way, Lagos, Nigeria';
+
+// Dynamically split the school name for the massive hero text
+$nameParts = explode(' ', $schoolName);
+$heroLine1 = $nameParts[0] ?? 'SCHOOL';
+$heroLine2 = implode(' ', array_slice($nameParts, 1));
+if (empty($heroLine2)) { $heroLine2 = 'DESK'; }
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebVault SchoolDesk - Premium School Management</title>
+    <title><?= e($schoolName) ?> - Premium School Management</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script>
@@ -27,14 +42,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         .hero-text {
-            font-size: clamp(4rem, 15vw, 14rem);
+            font-size: clamp(3rem, 12vw, 11rem);
             line-height: 0.85;
             letter-spacing: -0.05em;
             mix-blend-mode: overlay;
+            text-transform: uppercase;
+            text-align: center;
         }
-        /* Hide scrollbar for horizontal scroll areas if used */
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
 <body class="bg-bg text-textMain font-sans antialiased overflow-x-hidden">
@@ -43,7 +57,7 @@
     <nav class="absolute top-0 left-0 w-full z-50 px-6 py-6 flex justify-between items-center text-primary">
         <div class="flex items-center gap-2">
             <i data-lucide="graduation-cap" class="w-8 h-8 text-accent"></i>
-            <span class="text-2xl font-bold tracking-tight">WebVault<span class="font-light">SchoolDesk</span></span>
+            <span class="text-2xl font-bold tracking-tight truncate max-w-[200px] sm:max-w-xs"><?= e($schoolName) ?></span>
         </div>
         
         <div class="hidden md:flex gap-8 text-sm font-medium">
@@ -55,7 +69,7 @@
         <div class="flex items-center gap-4">
             <a href="/login" class="text-sm font-medium hover:text-accent transition hidden sm:block">Log in</a>
             <a href="/login" class="bg-primary text-white px-5 py-2.5 rounded-full text-sm font-medium hover:bg-blue-900 transition shadow-lg shadow-primary/30 flex items-center gap-2">
-                Get Started <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                Portal Login <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </a>
         </div>
     </nav>
@@ -73,10 +87,10 @@
             <div class="absolute inset-0 bg-primary/10"></div>
         </div>
 
-        <!-- Massive Overlapping Text -->
-        <div class="absolute z-10 flex flex-col items-center justify-center w-full mt-20 pointer-events-none select-none">
-            <h1 class="hero-text font-black text-white uppercase text-center drop-shadow-2xl">
-                SCHOOL<br>DESK
+        <!-- Massive Overlapping Text (Dynamic) -->
+        <div class="absolute z-10 flex flex-col items-center justify-center w-full mt-20 pointer-events-none select-none px-4">
+            <h1 class="hero-text font-black text-white drop-shadow-2xl">
+                <?= e($heroLine1) ?><br><?= e($heroLine2) ?>
             </h1>
         </div>
 
@@ -87,30 +101,26 @@
             <div class="max-w-md bg-white/80 backdrop-blur-md p-6 rounded-2xl border border-white/50 shadow-xl">
                 <div class="flex items-center gap-2 text-xs font-bold text-accent tracking-widest uppercase mb-3">
                     <span class="w-8 h-[2px] bg-accent"></span>
-                    New Era of Management
+                    Welcome to Excellence
                 </div>
                 <h2 class="text-4xl font-black text-primary uppercase leading-none mb-4">
                     Manage<br>with ease.
                 </h2>
-                <p class="text-sm text-muted mb-6 font-medium leading-relaxed">
-                    Simplify administration, academics, finance, and communication in one unified platform. Built for modern educational institutions.
+                <p class="text-sm text-muted mb-6 font-medium leading-relaxed italic">
+                    "<?= e($schoolMotto) ?>"
                 </p>
                 <a href="/login" class="inline-flex items-center gap-2 bg-primary text-white px-6 py-3 rounded-full text-sm font-bold hover:bg-blue-900 transition shadow-lg">
-                    EXPLORE NOW <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    ACCESS PORTAL <i data-lucide="arrow-right" class="w-4 h-4"></i>
                 </a>
             </div>
 
-            <!-- Right Floating Images (Like the fashion carousel) -->
+            <!-- Right Floating Images -->
             <div class="hidden lg:flex flex-col gap-4 relative">
                 <div class="w-40 h-48 rounded-2xl overflow-hidden shadow-2xl border-2 border-white transform translate-x-4">
                     <img src="https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover">
                 </div>
                 <div class="w-40 h-48 rounded-2xl overflow-hidden shadow-2xl border-2 border-white transform -translate-x-4">
                     <img src="https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover">
-                </div>
-                <div class="absolute bottom-4 right-4 flex gap-2">
-                    <button class="w-10 h-10 bg-white/30 backdrop-blur-md rounded-full flex items-center justify-center text-white border border-white/50 hover:bg-white/50 transition"><i data-lucide="arrow-left" class="w-4 h-4"></i></button>
-                    <button class="w-10 h-10 bg-white/30 backdrop-blur-md rounded-full flex items-center justify-center text-white border border-white/50 hover:bg-white/50 transition"><i data-lucide="arrow-right" class="w-4 h-4"></i></button>
                 </div>
             </div>
         </div>
@@ -120,7 +130,7 @@
     <div class="relative z-30 max-w-7xl mx-auto -mt-8 px-6">
         <div class="bg-primary text-white rounded-2xl p-4 sm:px-8 flex flex-wrap justify-between items-center shadow-2xl border border-blue-800">
             <div class="flex items-center gap-2 text-sm font-medium py-2">
-                <i data-lucide="shield-check" class="w-5 h-5 text-accent"></i> Secure & Reliable
+                <i data-lucide="shield-check" class="w-5 h-5 text-accent"></i> Secure Portal
             </div>
             <div class="hidden sm:block w-px h-6 bg-blue-800"></div>
             <div class="flex items-center gap-2 text-sm font-medium py-2">
@@ -132,12 +142,12 @@
             </div>
             <div class="hidden sm:block w-px h-6 bg-blue-800"></div>
             <div class="flex items-center gap-2 text-sm font-medium py-2">
-                <i data-lucide="headphones" class="w-5 h-5 text-accent"></i> 24/7 Support
+                <i data-lucide="mail" class="w-5 h-5 text-accent"></i> <?= e($schoolEmail) ?>
             </div>
         </div>
     </div>
 
-    <!-- Shop By Category (Adapted to User Portals) -->
+    <!-- Portals Section -->
     <section class="py-20 px-6 max-w-7xl mx-auto">
         <div class="flex flex-col md:flex-row justify-between items-end mb-10">
             <div>
@@ -146,13 +156,10 @@
                 </div>
                 <h2 class="text-3xl font-black text-primary uppercase">Tailored Portals</h2>
             </div>
-            <a href="#" class="text-sm font-bold text-primary hover:text-accent transition flex items-center gap-1 mt-4 md:mt-0">
-                View All Features <i data-lucide="arrow-right" class="w-4 h-4"></i>
-            </a>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <!-- Card 1 -->
+            <!-- Admin Card -->
             <div class="group relative h-80 rounded-2xl overflow-hidden cursor-pointer">
                 <img src="https://images.unsplash.com/photo-1544717305-2782549b5136?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                 <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/20 to-transparent"></div>
@@ -167,7 +174,7 @@
                 </div>
             </div>
 
-            <!-- Card 2 -->
+            <!-- Teacher Card -->
             <div class="group relative h-80 rounded-2xl overflow-hidden cursor-pointer">
                 <img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                 <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/20 to-transparent"></div>
@@ -182,7 +189,7 @@
                 </div>
             </div>
 
-            <!-- Card 3 -->
+            <!-- Parent Card -->
             <div class="group relative h-80 rounded-2xl overflow-hidden cursor-pointer">
                 <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                 <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/20 to-transparent"></div>
@@ -197,7 +204,7 @@
                 </div>
             </div>
 
-            <!-- Card 4 -->
+            <!-- Student Card -->
             <div class="group relative h-80 rounded-2xl overflow-hidden cursor-pointer">
                 <img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                 <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/20 to-transparent"></div>
@@ -214,76 +221,8 @@
         </div>
     </section>
 
-    <!-- Best Sellers (Adapted to Key Modules) -->
-    <section class="py-10 px-6 max-w-7xl mx-auto mb-20">
-        <div class="flex justify-between items-end mb-8 border-b border-gray-200 pb-4">
-            <h2 class="text-2xl font-black text-primary uppercase tracking-tight">Core Modules</h2>
-            <a href="#" class="text-sm font-bold text-primary hover:text-accent transition flex items-center gap-1">
-                View All <i data-lucide="arrow-right" class="w-4 h-4"></i>
-            </a>
-        </div>
-
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            
-            <!-- Module 1 -->
-            <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition group">
-                <div class="h-32 bg-gray-50 rounded-lg mb-4 flex items-center justify-center relative overflow-hidden">
-                    <i data-lucide="users" class="w-10 h-10 text-primary group-hover:scale-110 transition"></i>
-                </div>
-                <h4 class="text-sm font-bold text-primary mb-1">Student Records</h4>
-                <p class="text-xs text-muted">Admissions & Profiles</p>
-            </div>
-
-            <!-- Module 2 -->
-            <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition group">
-                <div class="h-32 bg-gray-50 rounded-lg mb-4 flex items-center justify-center relative overflow-hidden">
-                    <i data-lucide="wallet" class="w-10 h-10 text-primary group-hover:scale-110 transition"></i>
-                </div>
-                <h4 class="text-sm font-bold text-primary mb-1">Fee Collection</h4>
-                <p class="text-xs text-muted">Invoices & Receipts</p>
-            </div>
-
-            <!-- Module 3 -->
-            <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition group">
-                <div class="h-32 bg-gray-50 rounded-lg mb-4 flex items-center justify-center relative overflow-hidden">
-                    <i data-lucide="file-edit" class="w-10 h-10 text-primary group-hover:scale-110 transition"></i>
-                </div>
-                <h4 class="text-sm font-bold text-primary mb-1">Exam Scores</h4>
-                <p class="text-xs text-muted">CA & Exam Entry</p>
-            </div>
-
-            <!-- Module 4 -->
-            <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition group">
-                <div class="h-32 bg-gray-50 rounded-lg mb-4 flex items-center justify-center relative overflow-hidden">
-                    <i data-lucide="printer" class="w-10 h-10 text-primary group-hover:scale-110 transition"></i>
-                </div>
-                <h4 class="text-sm font-bold text-primary mb-1">Report Cards</h4>
-                <p class="text-xs text-muted">PDF Generation</p>
-            </div>
-
-            <!-- Module 5 -->
-            <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition group">
-                <div class="h-32 bg-gray-50 rounded-lg mb-4 flex items-center justify-center relative overflow-hidden">
-                    <i data-lucide="calendar-check" class="w-10 h-10 text-primary group-hover:scale-110 transition"></i>
-                </div>
-                <h4 class="text-sm font-bold text-primary mb-1">Attendance</h4>
-                <p class="text-xs text-muted">Daily Tracking</p>
-            </div>
-
-            <!-- Module 6 -->
-            <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition group">
-                <div class="h-32 bg-gray-50 rounded-lg mb-4 flex items-center justify-center relative overflow-hidden">
-                    <i data-lucide="megaphone" class="w-10 h-10 text-primary group-hover:scale-110 transition"></i>
-                </div>
-                <h4 class="text-sm font-bold text-primary mb-1">Announcements</h4>
-                <p class="text-xs text-muted">School-wide Broadcasts</p>
-            </div>
-
-        </div>
-    </section>
-
     <!-- Footer -->
-    <footer class="bg-primary text-white py-16 px-6 relative overflow-hidden">
+    <footer class="bg-primary text-white py-16 px-6 relative overflow-hidden mt-10">
         <div class="absolute top-0 right-0 w-96 h-96 bg-accent opacity-10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3"></div>
         
         <div class="max-w-7xl mx-auto relative z-10 grid grid-cols-1 md:grid-cols-4 gap-10">
@@ -292,15 +231,15 @@
                     <div class="bg-white p-2 rounded-lg text-primary">
                         <i data-lucide="graduation-cap" class="w-6 h-6"></i>
                     </div>
-                    <span class="text-2xl font-bold tracking-tight">WebVault<span class="font-light">SchoolDesk</span></span>
+                    <span class="text-2xl font-bold tracking-tight truncate"><?= e($schoolName) ?></span>
                 </div>
-                <p class="text-blue-200 text-sm max-w-sm leading-relaxed mb-6">
-                    The modern, all-in-one platform for managing your educational institution efficiently and securely. Built for schools that demand excellence.
+                <p class="text-blue-200 text-sm max-w-sm leading-relaxed mb-6 italic">
+                    "<?= e($schoolMotto) ?>"
                 </p>
-                <div class="flex gap-4">
-                    <a href="#" class="w-10 h-10 rounded-full bg-blue-800 flex items-center justify-center hover:bg-accent transition"><i data-lucide="twitter" class="w-4 h-4"></i></a>
-                    <a href="#" class="w-10 h-10 rounded-full bg-blue-800 flex items-center justify-center hover:bg-accent transition"><i data-lucide="facebook" class="w-4 h-4"></i></a>
-                    <a href="#" class="w-10 h-10 rounded-full bg-blue-800 flex items-center justify-center hover:bg-accent transition"><i data-lucide="instagram" class="w-4 h-4"></i></a>
+                <div class="space-y-2 text-sm text-blue-200">
+                    <p class="flex items-center gap-2"><i data-lucide="map-pin" class="w-4 h-4"></i> <?= e($schoolAddress) ?></p>
+                    <p class="flex items-center gap-2"><i data-lucide="phone" class="w-4 h-4"></i> <?= e($schoolPhone) ?></p>
+                    <p class="flex items-center gap-2"><i data-lucide="mail" class="w-4 h-4"></i> <?= e($schoolEmail) ?></p>
                 </div>
             </div>
             
@@ -326,8 +265,8 @@
         </div>
         
         <div class="max-w-7xl mx-auto mt-16 pt-8 border-t border-blue-800 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-blue-300 relative z-10">
-            <p>&copy; <?= date('Y') ?> WebVault SchoolDesk. All rights reserved.</p>
-            <p>Made with <i data-lucide="heart" class="w-3 h-3 inline text-red-500 mx-1"></i> for Educators.</p>
+            <p>&copy; <?= date('Y') ?> <?= e($schoolName) ?>. All rights reserved.</p>
+            <p>Powered by WebVault SchoolDesk.</p>
         </div>
     </footer>
 
