@@ -139,6 +139,18 @@ return [
         $controller = new SubjectController();
         $controller->store();
     },
+    'admin/subjects/edit' => function() {
+        $controller = new SubjectController();
+        $controller->edit();
+    },
+    'admin/subjects/update' => function() {
+        $controller = new SubjectController();
+        $controller->update();
+    },
+    'admin/subjects/delete' => function() {
+        $controller = new SubjectController();
+        $controller->destroy();
+    },
 
     // Admin: Class Management
     'admin/classes' => function() {
