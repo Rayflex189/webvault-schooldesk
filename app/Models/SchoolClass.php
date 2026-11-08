@@ -17,6 +17,16 @@ class SchoolClass {
     }
 
     /**
+     * Find a class by ID
+     */
+    public function find($id) {
+        $pdo = Database::getInstance();
+        $stmt = $pdo->prepare("SELECT * FROM classes WHERE id = ?");
+        $stmt->execute([$id]);
+        return $stmt->fetch();
+    }
+
+    /**
      * Create a new class
      */
     public function create($data) {
@@ -28,6 +38,20 @@ class SchoolClass {
         return $stmt->execute([
             ':name' => $data['name'],
             ':capacity' => $data['capacity']
+        ]);
+    }
+
+    /**
+     * Update a class
+     */
+    public function update($id, $data) {
+        $pdo = Database::getInstance();
+        $sql = "UPDATE classes SET name = :name, capacity = :capacity WHERE id = :id";
+        $stmt = $pdo->prepare($sql);
+        return $stmt->execute([
+            ':name'     => $data['name'],
+            ':capacity' => $data['capacity'],
+            ':id'       => $id
         ]);
     }
 
@@ -47,7 +71,6 @@ class SchoolClass {
         $stmt = $pdo->prepare("SELECT subject_id FROM class_subjects WHERE class_id = ?");
         $stmt->execute([$classId]);
         
-        // Returns a simple array like [1, 3, 4] instead of a multidimensional array
         return $stmt->fetchAll(PDO::FETCH_COLUMN);
     }
 
@@ -57,11 +80,9 @@ class SchoolClass {
     public function syncSubjects($classId, $subjectIds) {
         $pdo = Database::getInstance();
         
-        // 1. Delete existing assignments for this class
         $stmt = $pdo->prepare("DELETE FROM class_subjects WHERE class_id = ?");
         $stmt->execute([$classId]);
 
-        // 2. Insert new assignments if any were selected
         if (!empty($subjectIds)) {
             $sql = "INSERT INTO class_subjects (class_id, subject_id) VALUES ";
             $values = [];
