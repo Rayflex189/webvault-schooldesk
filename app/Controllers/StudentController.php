@@ -39,11 +39,41 @@ class StudentController {
         $success = $studentModel->create($_POST);
 
         if ($success) {
-            $_SESSION['success'] = "Student added successfully!";
+            $_SESSION['success'] = "Student added successfully! Default password is 'password123'.";
             redirect('admin/students');
         } else {
-            $_SESSION['error'] = "Failed to add student.";
+            $_SESSION['error'] = "Failed to add student. Admission number might already exist.";
             redirect('admin/students/create');
         }
+    }
+
+    public function edit() {
+        AuthMiddleware::adminOnly();
+        $id = $_GET['id'] ?? null;
+        if (!$id) redirect('admin/students');
+
+        $model = new Student();
+        $student = $model->find($id);
+        $classes = $model->getClasses();
+
+        view('admin.students.edit', ['student' => $student, 'classes' => $classes]);
+    }
+
+    public function update() {
+        AuthMiddleware::adminOnly();
+        verify_csrf($_POST['csrf_token'] ?? '');
+        
+        $id = $_POST['id'] ?? null;
+        if (!$id) redirect('admin/students');
+
+        $model = new Student();
+        $success = $model->update($id, $_POST);
+
+        if ($success) {
+            $_SESSION['success'] = "Student updated successfully!";
+        } else {
+            $_SESSION['error'] = "Failed to update student.";
+        }
+        redirect('admin/students');
     }
 }
