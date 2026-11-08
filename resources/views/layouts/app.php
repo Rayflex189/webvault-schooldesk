@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= env('APP_NAME') ?></title>
+    <title><?= env('APP_NAME') ?> - <?= htmlspecialchars(get_settings()['school_name'] ?? '') ?></title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -35,7 +35,6 @@
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        /* Custom scrollbar for sidebar */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
@@ -44,17 +43,17 @@
 </head>
 <body class="bg-bg text-textMain font-sans antialiased flex h-screen overflow-hidden relative">
 
-    <!-- Mobile Overlay (Darkens background when menu is open) -->
+    <!-- Mobile Overlay -->
     <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-40 hidden md:hidden transition-opacity duration-300"></div>
 
     <!-- Sidebar -->
     <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-primary text-white flex flex-col h-full shadow-lg transform -translate-x-full md:translate-x-0 md:static transition-transform duration-300 ease-in-out">
         <div class="h-16 flex items-center justify-between px-6 border-b border-blue-800">
-            <div class="flex items-center gap-3 text-xl font-bold tracking-tight">
-                <div class="bg-white p-1.5 rounded-lg text-primary">
+            <div class="flex items-center gap-3 text-lg font-bold tracking-tight truncate">
+                <div class="bg-white p-1.5 rounded-lg text-primary shrink-0">
                     <i data-lucide="graduation-cap" class="w-5 h-5"></i>
                 </div>
-                SchoolDesk
+                <?= htmlspecialchars(get_settings()['school_name'] ?? 'SchoolDesk') ?>
             </div>
             <!-- Mobile Close Button -->
             <button id="close-sidebar" class="md:hidden text-gray-300 hover:text-white p-1">
@@ -64,7 +63,7 @@
 
         <nav class="flex-1 overflow-y-auto py-4 px-3 space-y-1">
             <?php if(isset($_SESSION['role_id']) && $_SESSION['role_id'] == 1): ?>
-                <!-- ================= ADMIN MENU ================= -->
+                <!-- ADMIN MENU -->
                 <p class="px-3 text-xs font-semibold text-blue-300 uppercase tracking-wider mb-2 mt-2">Management</p>
                 <a href="/admin/dashboard" class="flex items-center gap-3 px-3 py-2.5 <?= $_SERVER['REQUEST_URI'] == '/admin/dashboard' ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
                     <i data-lucide="layout-dashboard" class="w-5 h-5"></i> Dashboard
@@ -102,15 +101,15 @@
                 <p class="px-3 text-xs font-semibold text-blue-300 uppercase tracking-wider mb-2 mt-6">Finance</p>
                 <a href="/admin/finance" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/admin/finance') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
                     <i data-lucide="wallet" class="w-5 h-5"></i> Fees & Payments
-                </a> 
+                </a>
 
-            <p class="px-3 text-xs font-semibold text-blue-300 uppercase tracking-wider mb-2 mt-6">System</p>
-<a href="/admin/settings" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/admin/settings') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
-    <i data-lucide="settings" class="w-5 h-5"></i> Settings
-</a>
+                <p class="px-3 text-xs font-semibold text-blue-300 uppercase tracking-wider mb-2 mt-6">System</p>
+                <a href="/admin/settings" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/admin/settings') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
+                    <i data-lucide="settings" class="w-5 h-5"></i> Settings
+                </a>
                 
             <?php elseif(isset($_SESSION['role_id']) && $_SESSION['role_id'] == 2): ?>
-                <!-- ================= TEACHER MENU ================= -->
+                <!-- TEACHER MENU -->
                 <p class="px-3 text-xs font-semibold text-blue-300 uppercase tracking-wider mb-2 mt-2">Teacher Portal</p>
                 <a href="/teacher/dashboard" class="flex items-center gap-3 px-3 py-2.5 <?= $_SERVER['REQUEST_URI'] == '/teacher/dashboard' ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
                     <i data-lucide="layout-dashboard" class="w-5 h-5"></i> My Dashboard
@@ -123,14 +122,14 @@
                 </a>
 
             <?php elseif(isset($_SESSION['role_id']) && $_SESSION['role_id'] == 3): ?>
-                <!-- ================= PARENT MENU ================= -->
+                <!-- PARENT MENU -->
                 <p class="px-3 text-xs font-semibold text-blue-300 uppercase tracking-wider mb-2 mt-2">Parent Portal</p>
                 <a href="/parent/dashboard" class="flex items-center gap-3 px-3 py-2.5 <?= $_SERVER['REQUEST_URI'] == '/parent/dashboard' ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
                     <i data-lucide="home" class="w-5 h-5"></i> My Dashboard
                 </a>
 
             <?php elseif(isset($_SESSION['role_id']) && $_SESSION['role_id'] == 4): ?>
-                <!-- ================= STUDENT MENU ================= -->
+                <!-- STUDENT MENU -->
                 <p class="px-3 text-xs font-semibold text-blue-300 uppercase tracking-wider mb-2 mt-2">Student Portal</p>
                 <a href="/student/dashboard" class="flex items-center gap-3 px-3 py-2.5 <?= $_SERVER['REQUEST_URI'] == '/student/dashboard' ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
                     <i data-lucide="home" class="w-5 h-5"></i> My Dashboard
@@ -177,6 +176,11 @@
                     <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
                     <input type="text" placeholder="Search anything..." class="pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent w-64">
                 </div>
+
+                <div class="hidden lg:flex items-center gap-2 bg-blue-50 text-blue-700 px-3 py-1.5 rounded-lg border border-blue-100 text-sm font-medium">
+                    <i data-lucide="calendar" class="w-4 h-4"></i>
+                    <?= htmlspecialchars(get_settings()['current_session'] ?? '2024/2025') ?> - <?= htmlspecialchars(get_settings()['current_term'] ?? 'First Term') ?>
+                </div>
             </div>
             
             <div class="flex items-center gap-4 text-gray-500">
@@ -204,10 +208,7 @@
 
     <!-- Scripts -->
     <script>
-        // Initialize Lucide icons
         lucide.createIcons();
-
-        // Mobile Menu Logic
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('sidebar-overlay');
         const mobileMenuBtn = document.getElementById('mobile-menu-btn');
