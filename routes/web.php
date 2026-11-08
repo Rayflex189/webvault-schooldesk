@@ -15,7 +15,7 @@ use App\Controllers\FinanceController;
 use App\Controllers\AnnouncementController;
 use App\Controllers\TeacherDashboardController;
 use App\Controllers\TeacherAttendanceController;
-use App\Middleware\AuthMiddleware;
+use App\Controllers\TeacherExamController;
 
 return [
     // ==========================================
@@ -41,9 +41,7 @@ return [
         $controller->index();
     },
     
-    // ==========================================
-    // Student Management
-    // ==========================================
+    // Admin: Student Management
     'admin/students' => function() {
         $controller = new StudentController();
         $controller->index();
@@ -57,9 +55,7 @@ return [
         $controller->store();
     },
 
-    // ==========================================
-    // Teacher Management
-    // ==========================================
+    // Admin: Teacher Management
     'admin/teachers' => function() {
         $controller = new TeacherController();
         $controller->index();
@@ -73,9 +69,7 @@ return [
         $controller->store();
     },
 
-    // ==========================================
-    // Subject Management
-    // ==========================================
+    // Admin: Subject Management
     'admin/subjects' => function() {
         $controller = new SubjectController();
         $controller->index();
@@ -89,9 +83,7 @@ return [
         $controller->store();
     },
 
-    // ==========================================
-    // Class Management
-    // ==========================================
+    // Admin: Class Management
     'admin/classes' => function() {
         $controller = new ClassController();
         $controller->index();
@@ -113,9 +105,7 @@ return [
         $controller->updateSubjects();
     },
 
-    // ==========================================
-    // Teacher Assignments
-    // ==========================================
+    // Admin: Teacher Assignments
     'admin/assignments' => function() {
         $controller = new TeacherAssignmentController();
         $controller->index();
@@ -129,9 +119,7 @@ return [
         $controller->store();
     },
 
-    // ==========================================
-    // Attendance Management (Admin)
-    // ==========================================
+    // Admin: Attendance Management
     'admin/attendance' => function() {
         $controller = new AttendanceController();
         $controller->index();
@@ -145,9 +133,7 @@ return [
         $controller->store();
     },
 
-    // ==========================================
-    // Exams & Results (Admin)
-    // ==========================================
+    // Admin: Exams & Results
     'admin/exams' => function() {
         $controller = new ExamController();
         $controller->index();
@@ -161,9 +147,7 @@ return [
         $controller->store();
     },
 
-    // ==========================================
-    // Report Cards (Admin)
-    // ==========================================
+    // Admin: Report Cards
     'admin/reports' => function() {
         $controller = new ReportCardController();
         $controller->index();
@@ -173,9 +157,7 @@ return [
         $controller->generate();
     },
 
-    // ==========================================
-    // Finance & Fees (Admin)
-    // ==========================================
+    // Admin: Finance & Fees
     'admin/finance' => function() {
         $controller = new FinanceController();
         $controller->index();
@@ -189,9 +171,7 @@ return [
         $controller->store();
     },
 
-    // ==========================================
-    // Announcements (Admin)
-    // ==========================================
+    // Admin: Announcements
     'admin/announcements' => function() {
         $controller = new AnnouncementController();
         $controller->index();
@@ -213,13 +193,27 @@ return [
         $controller->index();
     },
     
-    // Teacher Attendance
+    // Teacher: Attendance
     'teacher/attendance' => function() {
         $controller = new TeacherAttendanceController();
         $controller->mark();
     },
     'teacher/attendance/store' => function() {
         $controller = new TeacherAttendanceController();
+        $controller->store();
+    },
+
+    // Teacher: Exams & Scores
+    'teacher/exams' => function() {
+        $controller = new TeacherExamController();
+        $controller->index();
+    },
+    'teacher/exams/entry' => function() {
+        $controller = new TeacherExamController();
+        $controller->entry();
+    },
+    'teacher/exams/store' => function() {
+        $controller = new TeacherExamController();
         $controller->store();
     }
 ];
