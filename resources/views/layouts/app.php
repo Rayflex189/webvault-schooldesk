@@ -18,6 +18,15 @@
                         accent: '#0EA5E9',  // Sky Blue
                         bg: '#F8FAFC',      // Light Slate
                         textMain: '#0F172A'
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.4s ease-out forwards',
                     }
                 }
             }
@@ -36,10 +45,9 @@
 <body class="bg-bg text-textMain font-sans antialiased flex h-screen overflow-hidden relative">
 
     <!-- Mobile Overlay (Darkens background when menu is open) -->
-    <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-40 hidden md:hidden transition-opacity"></div>
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-40 hidden md:hidden transition-opacity duration-300"></div>
 
     <!-- Sidebar -->
-    <!-- Note: The classes here handle the mobile slide-in/out effect -->
     <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 bg-primary text-white flex flex-col h-full shadow-lg transform -translate-x-full md:translate-x-0 md:static transition-transform duration-300 ease-in-out">
         <div class="h-16 flex items-center justify-between px-6 border-b border-blue-800">
             <div class="flex items-center gap-3 text-xl font-bold tracking-tight">
@@ -73,18 +81,17 @@
                 Teachers
             </a> 
 
-<td class="px-6 py-4 text-right space-x-2">
-    <a href="/admin/classes/subjects?id=<?= $class['id'] ?>" class="inline-flex items-center gap-1 text-sm text-accent hover:text-blue-700 font-medium transition-colors mr-2">
-        <i data-lucide="book-open" class="w-4 h-4"></i> Subjects
-    </a>
-    <button class="text-gray-400 hover:text-primary transition-colors"><i data-lucide="edit" class="w-4 h-4"></i></button>
-</td>
+            <!-- Subjects Link -->
+            <a href="/admin/subjects" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/admin/subjects') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
+                <i data-lucide="book" class="w-5 h-5"></i>
+                Subjects
+            </a>
 
-<!-- Classes Link -->
-<a href="/admin/classes" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/admin/classes') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
-    <i data-lucide="school" class="w-5 h-5"></i>
-    Classes
-</a>
+            <!-- Classes Link -->
+            <a href="/admin/classes" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/admin/classes') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
+                <i data-lucide="school" class="w-5 h-5"></i>
+                Classes
+            </a>
             
             <a href="#" class="flex items-center gap-3 px-3 py-2.5 text-blue-200 hover:bg-blue-800/50 hover:text-white rounded-lg font-medium transition-colors">
                 <i data-lucide="calendar" class="w-5 h-5"></i>
@@ -130,7 +137,7 @@
                     <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
                 </button>
                 
-                <!-- User Dropdown (Simple link for now) -->
+                <!-- User Dropdown -->
                 <div class="flex items-center gap-2 cursor-pointer border-l pl-4 border-gray-200 ml-2">
                     <img src="https://ui-avatars.com/api/?name=<?= urlencode($_SESSION['username'] ?? 'Admin') ?>&background=0EA5E9&color=fff" class="w-8 h-8 rounded-full">
                     <span class="text-sm font-medium text-gray-700 hidden sm:block"><?= htmlspecialchars($_SESSION['username'] ?? 'Admin') ?></span>
@@ -141,8 +148,8 @@
             </div>
         </header>
 
-        <!-- Dynamic Page Content -->
-        <main class="flex-1 overflow-y-auto p-4 sm:p-6 pb-20">
+        <!-- Dynamic Page Content with Animation -->
+        <main class="flex-1 overflow-y-auto p-4 sm:p-6 pb-20 animate-fade-in">
             <?= $content ?? '' ?>
         </main>
     </div>
@@ -159,19 +166,12 @@
         const closeSidebarBtn = document.getElementById('close-sidebar');
 
         function toggleSidebar() {
-            // Toggle the slide-in class
             sidebar.classList.toggle('-translate-x-full');
-            // Toggle the dark overlay
             overlay.classList.toggle('hidden');
         }
 
-        // Open menu
         mobileMenuBtn.addEventListener('click', toggleSidebar);
-        
-        // Close menu on X button click
         closeSidebarBtn.addEventListener('click', toggleSidebar);
-        
-        // Close menu when clicking outside on the dark overlay
         overlay.addEventListener('click', toggleSidebar);
     </script>
 </body>
