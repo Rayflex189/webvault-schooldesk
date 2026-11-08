@@ -9,34 +9,37 @@ use App\Models\ExamResult;
 
 class TeacherExamController {
     
-    /**
-     * Show a list of the teacher's assigned classes/subjects to enter scores
-     */
     public function index() {
         TeacherMiddleware::handle();
         
         $model = new TeacherAssignment();
         $assignments = $model->getAssignmentsByUserId($_SESSION['user_id']);
 
-        view('teacher.exams.index', ['assignments' => $assignments]);
+        // Pass settings to view if needed, but mainly used in entry()
+        $settings = get_settings();
+
+        view('teacher.exams.index', [
+            'assignments' => $assignments,
+            'active_session' => $settings['current_session'] ?? '2024/2025',
+            'active_term' => $settings['current_term'] ?? 'First Term'
+        ]);
     }
 
-    /**
-     * Show the score entry sheet
-     */
     public function entry() {
         TeacherMiddleware::handle();
         
         $classId = $_GET['class_id'] ?? null;
         $subjectId = $_GET['subject_id'] ?? null;
-        $session = '2024/2025'; // Hardcoded for now, can be dynamic later
-        $term = $_GET['term'] ?? 'First Term';
+        
+        $settings = get_settings();
+        $session = $settings['current_session'] ?? '2024/2025';
+        $term = $_GET['term'] ?? $settings['current_term'] ?? 'First Term';
 
         if (!$classId || !$subjectId) {
             redirect('teacher/exams');
         }
 
-        // SECURITY CHECK: Is this teacher assigned to this class AND subject?
+        // SECURITY CHECK
         $assignmentModel = new TeacherAssignment();
         if (!$assignmentModel->isTeacherAssigned($_SESSION['user_id'], $classId, $subjectId)) {
             http_response_code(403);
@@ -55,9 +58,6 @@ class TeacherExamController {
         ]);
     }
 
-    /**
-     * Save the scores
-     */
     public function store() {
         TeacherMiddleware::handle();
         verify_csrf($_POST['csrf_token'] ?? '');
