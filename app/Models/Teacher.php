@@ -18,6 +18,16 @@ class Teacher {
     }
 
     /**
+     * Find a teacher by ID
+     */
+    public function find($id) {
+        $pdo = Database::getInstance();
+        $stmt = $pdo->prepare("SELECT * FROM teachers WHERE id = ?");
+        $stmt->execute([$id]);
+        return $stmt->fetch();
+    }
+
+    /**
      * Create a new teacher record and their corresponding user account
      */
     public function create($data) {
@@ -27,7 +37,6 @@ class Teacher {
             $pdo->beginTransaction();
 
             // 1. Create the User Account
-            // Default password is 'password123'
             $passwordHash = password_hash('password123', PASSWORD_DEFAULT);
             
             $userSql = "INSERT INTO users (role_id, username, email, password_hash) 
@@ -63,5 +72,26 @@ class Teacher {
             $pdo->rollBack();
             return false;
         }
+    }
+
+    /**
+     * Update a teacher's profile
+     */
+    public function update($id, $data) {
+        $pdo = Database::getInstance();
+        $sql = "UPDATE teachers 
+                SET first_name = :first_name, last_name = :last_name, phone = :phone, 
+                    gender = :gender, qualification = :qualification, status = :status 
+                WHERE id = :id";
+        $stmt = $pdo->prepare($sql);
+        return $stmt->execute([
+            ':first_name'    => $data['first_name'],
+            ':last_name'     => $data['last_name'],
+            ':phone'         => $data['phone'],
+            ':gender'        => $data['gender'],
+            ':qualification' => $data['qualification'],
+            ':status'        => $data['status'],
+            ':id'            => $id
+        ]);
     }
 }
