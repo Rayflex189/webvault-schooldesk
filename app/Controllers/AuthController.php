@@ -4,14 +4,17 @@
 namespace App\Controllers;
 
 use Database;
-use App\Middleware\AuthMiddleware;
 
 class AuthController {
     
     public function login() {
-        // If already logged in, go to dashboard
+        // If already logged in, redirect based on role
         if (isset($_SESSION['user_id'])) {
-            redirect('admin/dashboard');
+            if ($_SESSION['role_id'] == 1) {
+                redirect('admin/dashboard');
+            } elseif ($_SESSION['role_id'] == 2) {
+                redirect('teacher/dashboard');
+            }
         }
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -42,12 +45,14 @@ class AuthController {
                 $_SESSION['role_id'] = $user['role_id'];
                 $_SESSION['username'] = $user['username'];
 
-                // Redirect based on role
+                // 4. Redirect based on role
                 if ($user['role_id'] == 1) {
                     redirect('admin/dashboard');
+                } elseif ($user['role_id'] == 2) {
+                    redirect('teacher/dashboard');
                 } else {
-                    // Redirect other roles to their respective dashboards
-                    redirect('dashboard'); 
+                    // Fallback for parents/students if we add their portals later
+                    redirect('login'); 
                 }
             } else {
                 $_SESSION['error'] = 'Invalid username or password.';
