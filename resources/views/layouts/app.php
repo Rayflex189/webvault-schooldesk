@@ -107,6 +107,12 @@
 <a href="/admin/exams" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/admin/exams') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
     <i data-lucide="file-edit" class="w-5 h-5"></i>
     Exams & Results
+</a> 
+
+            <!-- Report Cards Link -->
+<a href="/admin/reports" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/admin/reports') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
+    <i data-lucide="printer" class="w-5 h-5"></i>
+    Report Cards
 </a>
             <a href="#" class="flex items-center gap-3 px-3 py-2.5 text-blue-200 hover:bg-blue-800/50 hover:text-white rounded-lg font-medium transition-colors">
                 <i data-lucide="wallet" class="w-5 h-5"></i>
