@@ -17,6 +17,7 @@ use App\Controllers\ExamController;
 use App\Controllers\ReportCardController;
 use App\Controllers\FinanceController;
 use App\Controllers\AnnouncementController;
+use App\Controllers\CommunicationController;
 use App\Controllers\TeacherDashboardController;
 use App\Controllers\TeacherAttendanceController;
 use App\Controllers\TeacherExamController;
@@ -312,6 +313,16 @@ return [
     'admin/announcements/store' => function() {
         $controller = new AnnouncementController();
         $controller->store();
+    },
+
+    // Admin: Communication
+    'admin/communication' => function() {
+        $controller = new CommunicationController();
+        $controller->index();
+    },
+    'admin/communication/send' => function() {
+        $controller = new CommunicationController();
+        $controller->send();
     },
 
     // Admin: Settings
