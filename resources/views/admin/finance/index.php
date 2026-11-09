@@ -20,15 +20,21 @@ ob_start();
     <?php unset($_SESSION['error']); ?>
 <?php endif; ?>
 
+<!-- Page Header with New Buttons -->
 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
     <div>
         <h1 class="text-2xl font-bold text-gray-800">Finance & Fees</h1>
         <p class="text-sm text-gray-500 mt-1">Track fee payments and outstanding balances.</p>
     </div>
     
-    <a href="/admin/finance/create" class="bg-primary hover:bg-blue-900 text-white px-4 py-2.5 rounded-lg text-sm font-medium flex items-center gap-2 shadow-sm transition-colors w-full sm:w-auto justify-center">
-        <i data-lucide="plus" class="w-4 h-4"></i> Record Payment
-    </a>
+    <div class="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+        <a href="/admin/finance/manage-fees" class="bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 px-4 py-2.5 rounded-lg text-sm font-medium flex items-center gap-2 shadow-sm transition-colors w-full sm:w-auto justify-center">
+            <i data-lucide="settings" class="w-4 h-4"></i> Manage Fees
+        </a>
+        <a href="/admin/finance/create" class="bg-primary hover:bg-blue-900 text-white px-4 py-2.5 rounded-lg text-sm font-medium flex items-center gap-2 shadow-sm transition-colors w-full sm:w-auto justify-center">
+            <i data-lucide="plus" class="w-4 h-4"></i> Record Payment
+        </a>
+    </div>
 </div>
 
 <!-- Filters -->
