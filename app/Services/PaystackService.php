@@ -41,8 +41,13 @@ class PaystackService {
         ]);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); 
         
+        // Disable SSL verification for local testing (Termux/Localhost)
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        
         $result = curl_exec($ch);
-        curl_close($ch);
+        
+        // Note: curl_close($ch) is deprecated in PHP 8.0+ and causes output warnings
+        // that break the header() redirect. We simply remove it.
 
         return json_decode($result, true);
     }
@@ -61,9 +66,11 @@ class PaystackService {
             "Cache-Control: no-cache",
         ]);
         
+        // Disable SSL verification for local testing (Termux/Localhost)
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        
         $result = curl_exec($ch);
-        curl_close($ch);
-
+        
         return json_decode($result, true);
     }
 }
