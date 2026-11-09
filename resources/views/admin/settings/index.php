@@ -14,12 +14,12 @@ ob_start();
 
 <div class="mb-6">
     <h1 class="text-2xl font-bold text-gray-800">School Settings</h1>
-    <p class="text-sm text-gray-500 mt-1">Configure your school's profile and academic calendar.</p>
+    <p class="text-sm text-gray-500 mt-1">Configure your school's profile, SMTP email gateway, and academic calendar.</p>
 </div>
 
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
     
-    <!-- Left Column: School Profile -->
+    <!-- Left Column: School Profile & SMTP -->
     <div class="space-y-6">
         <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
             <h2 class="text-lg font-bold text-gray-800 mb-4 border-b pb-2">School Information</h2>
@@ -52,8 +52,54 @@ ob_start();
                     </div>
                 </div>
 
-                <button type="submit" class="w-full bg-primary hover:bg-blue-900 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-                    Save School Info
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Contact Form Receiving Email</label>
+                    <input type="email" name="contact_email" value="<?= e($settings['contact_email'] ?? '') ?>" required placeholder="admin@school.com" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent">
+                </div>
+
+                <!-- SMTP Settings Block -->
+                <div class="border-t pt-4 mt-4">
+                    <h4 class="text-sm font-bold text-gray-800 mb-3 flex items-center gap-2">
+                        <i data-lucide="server" class="w-4 h-4 text-accent"></i> SMTP Email Gateway
+                    </h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-medium text-gray-700 mb-1">SMTP Host</label>
+                            <input type="text" name="smtp_host" value="<?= e($settings['smtp_host'] ?? '') ?>" placeholder="smtp.gmail.com" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-gray-700 mb-1">SMTP Port</label>
+                            <input type="number" name="smtp_port" value="<?= e($settings['smtp_port'] ?? '587') ?>" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-gray-700 mb-1">SMTP Username</label>
+                            <input type="text" name="smtp_user" value="<?= e($settings['smtp_user'] ?? '') ?>" placeholder="your@email.com" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-gray-700 mb-1">SMTP Password</label>
+                            <input type="password" name="smtp_pass" value="<?= e($settings['smtp_pass'] ?? '') ?>" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-gray-700 mb-1">Encryption</label>
+                            <select name="smtp_encryption" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent bg-white text-sm">
+                                <option value="tls" <?= ($settings['smtp_encryption'] ?? '') == 'tls' ? 'selected' : '' ?>>TLS (Port 587)</option>
+                                <option value="ssl" <?= ($settings['smtp_encryption'] ?? '') == 'ssl' ? 'selected' : '' ?>>SSL (Port 465)</option>
+                                <option value="none" <?= ($settings['smtp_encryption'] ?? '') == 'none' ? 'selected' : '' ?>>None</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-gray-700 mb-1">From Email</label>
+                            <input type="email" name="mail_from_email" value="<?= e($settings['mail_from_email'] ?? '') ?>" placeholder="no-reply@school.com" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent text-sm">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-xs font-medium text-gray-700 mb-1">From Name</label>
+                            <input type="text" name="mail_from_name" value="<?= e($settings['mail_from_name'] ?? '') ?>" placeholder="SchoolDesk Admin" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent text-sm">
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full bg-primary hover:bg-blue-900 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors mt-2">
+                    Save Settings
                 </button>
             </form>
         </div>
