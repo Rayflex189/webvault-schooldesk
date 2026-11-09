@@ -8,6 +8,9 @@ use PDO;
 
 class Finance {
     
+    /**
+     * Get the fee ledger showing expected vs paid per student
+     */
     public function getFeeLedger($session, $term) {
         $pdo = Database::getInstance();
         $sql = "SELECT s.id, s.first_name, s.last_name, s.admission_number, c.name AS class_name,
@@ -29,6 +32,9 @@ class Finance {
         return $stmt->fetchAll();
     }
 
+    /**
+     * Get the balance for a single student
+     */
     public function getStudentBalance($studentId, $session, $term) {
         $pdo = Database::getInstance();
         $sql = "SELECT 
@@ -48,6 +54,9 @@ class Finance {
         ];
     }
 
+    /**
+     * Record a manual payment
+     */
     public function recordPayment($data) {
         $pdo = Database::getInstance();
         try {
@@ -72,6 +81,9 @@ class Finance {
         }
     }
     
+    /**
+     * Get all active students
+     */
     public function getStudents() {
         $pdo = Database::getInstance();
         return $pdo->query("
@@ -83,11 +95,17 @@ class Finance {
         ")->fetchAll();
     }
 
+    /**
+     * Get all classes
+     */
     public function getClasses() {
         $pdo = Database::getInstance();
         return $pdo->query("SELECT id, name FROM classes ORDER BY name ASC")->fetchAll();
     }
 
+    /**
+     * Get fee structures for a specific session and term
+     */
     public function getFeeStructures($session, $term) {
         $pdo = Database::getInstance();
         $sql = "SELECT f.*, c.name AS class_name 
@@ -100,6 +118,9 @@ class Finance {
         return $stmt->fetchAll();
     }
 
+    /**
+     * Save or update a fee structure
+     */
     public function saveFeeStructure($data) {
         $pdo = Database::getInstance();
         $sql = "INSERT INTO fee_structures (class_id, session, term, amount) 
@@ -112,5 +133,20 @@ class Finance {
             ':term'     => $data['term'],
             ':amount'   => $data['amount']
         ]);
+    }
+
+    /**
+     * Get all transactions for the Audit Trail
+     */
+    public function getAllTransactions() {
+        $pdo = Database::getInstance();
+        $sql = "SELECT p.*, 
+                       s.first_name, s.last_name, s.admission_number,
+                       u.username as recorded_by_name
+                FROM payments p
+                JOIN students s ON p.student_id = s.id
+                JOIN users u ON p.recorded_by = u.id
+                ORDER BY p.created_at DESC";
+        return $pdo->query($sql)->fetchAll();
     }
 }
