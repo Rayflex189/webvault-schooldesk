@@ -28,6 +28,9 @@ ob_start();
     </div>
     
     <div class="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+        <a href="/admin/finance/audit-trail" class="bg-emerald-50 border border-emerald-200 text-emerald-700 hover:bg-emerald-100 px-4 py-2.5 rounded-lg text-sm font-medium flex items-center gap-2 shadow-sm transition-colors w-full sm:w-auto justify-center">
+            <i data-lucide="shield-check" class="w-4 h-4"></i> Audit Trail
+        </a>
         <a href="/admin/finance/manage-fees" class="bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 px-4 py-2.5 rounded-lg text-sm font-medium flex items-center gap-2 shadow-sm transition-colors w-full sm:w-auto justify-center">
             <i data-lucide="settings" class="w-4 h-4"></i> Manage Fees
         </a>
