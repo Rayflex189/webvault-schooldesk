@@ -111,6 +111,10 @@ return [
         $controller = new TeacherController();
         $controller->update();
     },
+    'admin/teachers/delete' => function() {
+        $controller = new TeacherController();
+        $controller->destroy();
+    },
 
     // Admin: Parent Management
     'admin/parents' => function() {
