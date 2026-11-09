@@ -17,23 +17,32 @@ class Setting {
     }
 
     /**
-     * Update school information
+     * Update school information and SMTP settings
      */
     public function updateSchoolInfo($data) {
         $pdo = Database::getInstance();
         
         $sql = "UPDATE school_settings 
-                SET school_name = :name, motto = :motto, address = :address, phone = :phone, email = :email, contact_email = :contact_email 
+                SET school_name = :name, motto = :motto, address = :address, phone = :phone, email = :email, contact_email = :contact_email,
+                    smtp_host = :smtp_host, smtp_port = :smtp_port, smtp_user = :smtp_user, smtp_pass = :smtp_pass, smtp_encryption = :smtp_encryption,
+                    mail_from_email = :mail_from_email, mail_from_name = :mail_from_name
                 WHERE id = 1";
                 
         $stmt = $pdo->prepare($sql);
         return $stmt->execute([
-            ':name'          => $data['school_name'],
-            ':motto'         => $data['motto'],
-            ':address'       => $data['address'],
-            ':phone'         => $data['phone'],
-            ':email'         => $data['email'],
-            ':contact_email' => $data['contact_email']
+            ':name'            => $data['school_name'],
+            ':motto'           => $data['motto'],
+            ':address'         => $data['address'],
+            ':phone'           => $data['phone'],
+            ':email'           => $data['email'],
+            ':contact_email'   => $data['contact_email'],
+            ':smtp_host'       => $data['smtp_host'] ?? null,
+            ':smtp_port'       => $data['smtp_port'] ?? 587,
+            ':smtp_user'       => $data['smtp_user'] ?? null,
+            ':smtp_pass'       => $data['smtp_pass'] ?? null,
+            ':smtp_encryption' => $data['smtp_encryption'] ?? 'tls',
+            ':mail_from_email' => $data['mail_from_email'] ?? null,
+            ':mail_from_name'  => $data['mail_from_name'] ?? null
         ]);
     }
 
