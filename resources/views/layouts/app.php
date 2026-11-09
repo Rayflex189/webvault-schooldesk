@@ -76,6 +76,9 @@ $settings = get_settings();
                 <a href="/admin/announcements" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/admin/announcements') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
                     <i data-lucide="megaphone" class="w-5 h-5"></i> Announcements
                 </a>
+            <a href="/admin/communication" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/admin/communication') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
+    <i data-lucide="message-square" class="w-5 h-5"></i> Communication
+            </a>
                 <a href="/admin/students" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/admin/students') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
                     <i data-lucide="users" class="w-5 h-5"></i> Students
                 </a>
