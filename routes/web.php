@@ -267,6 +267,14 @@ return [
         $controller = new FinanceController();
         $controller->store();
     },
+    'admin/finance/manage-fees' => function() {
+        $controller = new FinanceController();
+        $controller->manageFees();
+    },
+    'admin/finance/save-fees' => function() {
+        $controller = new FinanceController();
+        $controller->saveFees();
+    },
 
     // Admin: Announcements
     'admin/announcements' => function() {
