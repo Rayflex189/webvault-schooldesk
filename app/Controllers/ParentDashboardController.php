@@ -166,4 +166,37 @@ class ParentDashboardController {
             'term' => $term
         ]);
     }
+
+    /**
+     * View booklists for linked children
+     */
+    public function books() {
+        ParentMiddleware::handle();
+        $pdo = Database::getInstance();
+        $userId = $_SESSION['user_id'];
+
+        // Get linked children
+        $stmt = $pdo->prepare("
+            SELECT s.id, s.first_name, s.last_name, s.class_id, c.name AS class_name
+            FROM students s
+            JOIN student_guardians sg ON s.id = sg.student_id
+            JOIN guardians g ON sg.guardian_id = g.id
+            JOIN classes c ON s.class_id = c.id
+            WHERE g.user_id = ?
+        ");
+        $stmt->execute([$userId]);
+        $children = $stmt->fetchAll();
+
+        $bookModel = new \App\Models\Book();
+        $childrenBooks = [];
+        foreach($children as $child) {
+            $childrenBooks[] = [
+                'child_name' => $child['first_name'] . ' ' . $child['last_name'],
+                'class_name' => $child['class_name'],
+                'books' => $bookModel->getByClass($child['class_id'])
+            ];
+        }
+
+        view('parent.books', ['childrenBooks' => $childrenBooks]);
+    }
 }
