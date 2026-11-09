@@ -42,7 +42,7 @@ ob_start();
     </div>
 </div>
 
-<!-- Stat Cards Grid (Now 2 columns on mobile for better UI) -->
+<!-- Stat Cards Grid -->
 <div class="grid grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4 mb-6">
     
     <!-- Card 1: Students -->
@@ -93,19 +93,25 @@ ob_start();
         </div>
     </div>
 
-    <!-- Card 4: Fees -->
-    <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex flex-col justify-between">
+    <!-- Card 4: Fees (Upgraded to show Collected & Outstanding) -->
+    <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex flex-col justify-between col-span-2 lg:col-span-1">
         <div class="flex items-start justify-between">
             <div class="p-2 bg-emerald-50 text-emerald-600 rounded-lg">
                 <i data-lucide="wallet" class="w-5 h-5"></i>
             </div>
+            <span class="text-[10px] font-bold bg-gray-100 text-gray-500 px-2 py-1 rounded-full uppercase"><?= htmlspecialchars($active_term ?? 'First Term') ?></span>
         </div>
         <div class="mt-4">
-            <p class="text-xs text-gray-500 font-medium uppercase tracking-wider">Fees Collection</p>
-            <h3 class="text-2xl font-bold text-gray-800 mt-1">₦<?= number_format($stats['fees_collected'], 2) ?></h3>
-            <p class="text-xs text-green-600 mt-2 flex items-center gap-1 font-medium">
-                <i data-lucide="arrow-up-right" class="w-3 h-3"></i> <?= htmlspecialchars($active_term ?? 'First Term') ?> Total
-            </p>
+            <p class="text-xs text-gray-500 font-medium uppercase tracking-wider">Fees Collected</p>
+            <h3 class="text-2xl font-bold text-emerald-600 mt-1">₦<?= number_format($stats['fees_collected'], 2) ?></h3>
+            <div class="flex flex-col gap-1 mt-2">
+                <p class="text-[11px] text-gray-500 flex items-center gap-1">
+                    <span class="w-1.5 h-1.5 rounded-full bg-gray-400"></span> Expected: ₦<?= number_format($stats['total_expected'], 2) ?>
+                </p>
+                <p class="text-[11px] text-red-500 font-medium flex items-center gap-1">
+                    <span class="w-1.5 h-1.5 rounded-full bg-red-400"></span> Balance: ₦<?= number_format($stats['total_outstanding'], 2) ?>
+                </p>
+            </div>
         </div>
     </div>
 
@@ -141,7 +147,7 @@ ob_start();
         </div>
     </div>
 
-    <!-- Recent Activities (Recently Added Students) -->
+    <!-- Recent Activities -->
     <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
         <div class="flex justify-between items-center mb-4">
             <h2 class="text-lg font-bold text-gray-800">Recent Admissions</h2>
@@ -177,7 +183,6 @@ ob_start();
         <div class="flex justify-between items-center mb-6">
             <h2 class="text-lg font-bold text-gray-800">Student Distribution by Class</h2>
         </div>
-        <!-- Canvas for Bar Chart -->
         <div class="flex-1 relative w-full h-72">
             <canvas id="studentsChart"></canvas>
         </div>
@@ -190,9 +195,8 @@ ob_start();
     // --- 1. Attendance Line Chart ---
     const attCtx = document.getElementById('attendanceChart').getContext('2d');
     
-    // Create gradient for present line
     let gradientPresent = attCtx.createLinearGradient(0, 0, 0, 300);
-    gradientPresent.addColorStop(0, 'rgba(14, 165, 233, 0.5)'); // Sky blue
+    gradientPresent.addColorStop(0, 'rgba(14, 165, 233, 0.5)');
     gradientPresent.addColorStop(1, 'rgba(14, 165, 233, 0.0)');
 
     new Chart(attCtx, {
@@ -208,7 +212,7 @@ ob_start();
                     borderWidth: 2,
                     pointBackgroundColor: '#0EA5E9',
                     fill: true,
-                    tension: 0.4 // Smooth curves
+                    tension: 0.4
                 },
                 {
                     label: 'Absent',
@@ -225,9 +229,7 @@ ob_start();
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            plugins: {
-                legend: { position: 'top', labels: { usePointStyle: true, boxWidth: 8 } }
-            },
+            plugins: { legend: { position: 'top', labels: { usePointStyle: true, boxWidth: 8 } } },
             scales: {
                 y: { beginAtZero: true, grid: { borderDash: [2, 4], color: '#E2E8F0' } },
                 x: { grid: { display: false } }
@@ -244,7 +246,7 @@ ob_start();
             datasets: [{
                 label: 'Number of Students',
                 data: <?= $chart_students_data ?>,
-                backgroundColor: '#1E3A8A', // Navy
+                backgroundColor: '#1E3A8A',
                 borderRadius: 6,
                 barThickness: 40
             }]
@@ -252,9 +254,7 @@ ob_start();
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            plugins: {
-                legend: { display: false }
-            },
+            plugins: { legend: { display: false } },
             scales: {
                 y: { beginAtZero: true, ticks: { stepSize: 1 }, grid: { borderDash: [2, 4], color: '#E2E8F0' } },
                 x: { grid: { display: false } }
@@ -264,7 +264,6 @@ ob_start();
 </script>
 
 <?php
-// Render the content into the layout
 $content = ob_get_clean();
 require_once __DIR__ . '/../layouts/app.php';
 ?>
