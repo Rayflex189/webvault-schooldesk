@@ -1,57 +1,61 @@
 <?php
-// app/Controllers/SubjectController.php
+// app/Controllers/StudentController.php
 
 namespace App\Controllers;
 
-use App\Models\Subject;
+use App\Models\Student;
 use App\Middleware\AuthMiddleware;
 
-class SubjectController {
+class StudentController {
     
     public function index() {
         AuthMiddleware::adminOnly();
-        $subjectModel = new Subject();
-        $subjects = $subjectModel->all();
-        view('admin.subjects.index', ['subjects' => $subjects]);
+        $studentModel = new Student();
+        $students = $studentModel->all();
+        view('admin.students.index', ['students' => $students]);
     }
 
     public function create() {
         AuthMiddleware::adminOnly();
-        view('admin.subjects.create');
+        $studentModel = new Student();
+        $classes = $studentModel->getClasses();
+        view('admin.students.create', ['classes' => $classes]);
     }
 
     public function store() {
         AuthMiddleware::adminOnly();
         verify_csrf($_POST['csrf_token'] ?? '');
         
-        if (empty($_POST['name']) || empty($_POST['code'])) {
-            $_SESSION['error'] = "Subject name and code are required.";
-            redirect('admin/subjects/create');
+        $required = ['admission_number', 'first_name', 'last_name', 'gender', 'dob', 'class_id'];
+        foreach ($required as $field) {
+            if (empty($_POST[$field])) {
+                $_SESSION['error'] = "All fields are required.";
+                redirect('admin/students/create');
+            }
         }
 
-        $subjectModel = new Subject();
-        $success = $subjectModel->create($_POST);
+        $studentModel = new Student();
+        $success = $studentModel->create($_POST);
 
         if ($success) {
-            $_SESSION['success'] = "Subject added successfully!";
-            redirect('admin/subjects');
+            $_SESSION['success'] = "Student added successfully! Default password is 'password123'.";
+            redirect('admin/students');
         } else {
-            $_SESSION['error'] = "Failed to add subject. It might already exist.";
-            redirect('admin/subjects/create');
+            $_SESSION['error'] = "Failed to add student. Admission number might already exist.";
+            redirect('admin/students/create');
         }
     }
 
     public function edit() {
         AuthMiddleware::adminOnly();
         $id = $_GET['id'] ?? null;
-        if (!$id) redirect('admin/subjects');
+        if (!$id) redirect('admin/students');
 
-        $model = new Subject();
-        $subject = $model->find($id);
+        $model = new Student();
+        $student = $model->find($id);
+        $classes = $model->getClasses();
 
-        if (!$subject) redirect('admin/subjects');
-
-        view('admin.subjects.edit', ['subject' => $subject]);
+        view('admin.students.edit', ['student' => $student, 'classes' => $classes]);
     }
 
     public function update() {
@@ -59,17 +63,17 @@ class SubjectController {
         verify_csrf($_POST['csrf_token'] ?? '');
         
         $id = $_POST['id'] ?? null;
-        if (!$id) redirect('admin/subjects');
+        if (!$id) redirect('admin/students');
 
-        $model = new Subject();
+        $model = new Student();
         $success = $model->update($id, $_POST);
 
         if ($success) {
-            $_SESSION['success'] = "Subject updated successfully!";
+            $_SESSION['success'] = "Student updated successfully!";
         } else {
-            $_SESSION['error'] = "Failed to update subject.";
+            $_SESSION['error'] = "Failed to update student.";
         }
-        redirect('admin/subjects');
+        redirect('admin/students');
     }
 
     public function destroy() {
@@ -77,16 +81,16 @@ class SubjectController {
         verify_csrf($_POST['csrf_token'] ?? '');
         
         $id = $_POST['id'] ?? null;
-        if (!$id) redirect('admin/subjects');
+        if (!$id) redirect('admin/students');
 
-        $model = new Subject();
+        $model = new Student();
         $success = $model->delete($id);
 
         if ($success) {
-            $_SESSION['success'] = "Subject deleted successfully!";
+            $_SESSION['success'] = "Student deleted successfully!";
         } else {
-            $_SESSION['error'] = "Failed to delete subject. It might be assigned to a class or teacher.";
+            $_SESSION['error'] = "Failed to delete student.";
         }
-        redirect('admin/subjects');
+        redirect('admin/students');
     }
 }
