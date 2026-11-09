@@ -268,21 +268,22 @@ class ParentDashboardController {
                 $pdo->beginTransaction();
                 
                 $stmt = $pdo->prepare("INSERT INTO payments (student_id, amount, payment_method, reference, term, session, recorded_by) VALUES (?, ?, 'Paystack', ?, ?, ?, ?)");
-                // recorded_by is set to parent's user_id
+                
                 $stmt->execute([
                     $studentId, 
                     $verifiedAmount, 
                     $reference, 
                     $settings['current_term'], 
                     $settings['current_session'], 
-                    $_SESSION['user_id']
+                    $_SESSION['user_id'] // Parents are recording their own payments
                 ]);
                 
                 $pdo->commit();
                 $_SESSION['success'] = "Payment of ₦" . number_format($verifiedAmount, 2) . " was successful!";
             } catch (\Exception $e) {
                 $pdo->rollBack();
-                $_SESSION['error'] = "Payment verified but database error occurred.";
+                // UPDATE: Show the exact SQL error instead of a generic message
+                $_SESSION['error'] = "DB Error: " . $e->getMessage();
             }
         } else {
             $_SESSION['error'] = "Payment verification failed or was cancelled.";
