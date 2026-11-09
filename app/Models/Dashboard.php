@@ -25,21 +25,21 @@ class Dashboard {
         $presentToday = $pdo->query("SELECT COUNT(*) FROM attendance WHERE date = '$today' AND status = 'present'")->fetchColumn();
         $attendancePercentage = $students > 0 ? round(($presentToday / $students) * 100) : 0;
         
-        // 5. Finance Stats (Robust Query using TRIM)
+        // 5. Finance Stats
         // Total Collected
-        $stmt = $pdo->prepare("SELECT SUM(amount) FROM payments WHERE TRIM(session) = TRIM(?) AND TRIM(term) = TRIM(?)");
+        $stmt = $pdo->prepare("SELECT SUM(amount) FROM payments WHERE session = ? AND term = ?");
         $stmt->execute([$session, $term]);
-        $feesCollected = $stmt->fetchColumn() ?? 0;
+        $feesCollected = $stmt->fetchColumn() ?: 0;
 
-        // Total Expected (Sum of all active students' class fees)
+        // Total Expected
         $stmt = $pdo->prepare("
             SELECT SUM(f.amount) 
             FROM students s 
             JOIN fee_structures f ON s.class_id = f.class_id 
-            WHERE TRIM(f.session) = TRIM(?) AND TRIM(f.term) = TRIM(?) AND s.status = 'active'
+            WHERE f.session = ? AND f.term = ? AND s.status = 'active'
         ");
         $stmt->execute([$session, $term]);
-        $totalExpected = $stmt->fetchColumn() ?? 0;
+        $totalExpected = $stmt->fetchColumn() ?: 0;
 
         // Outstanding Balance
         $totalOutstanding = $totalExpected - $feesCollected;
@@ -53,6 +53,35 @@ class Dashboard {
             'total_expected' => $totalExpected,
             'total_outstanding' => $totalOutstanding
         ];
+    }
+
+    /**
+     * Get detailed fee analysis for every active student
+     */
+    public function getFeesAnalysis($session = '2024/2025', $term = 'First Term') {
+        $pdo = Database::getInstance();
+        
+        $sql = "SELECT s.id, s.first_name, s.last_name, s.admission_number, c.name AS class_name,
+                       COALESCE(f.amount, 0) AS expected_fee,
+                       COALESCE(SUM(p.amount), 0) AS total_paid
+                FROM students s
+                JOIN classes c ON s.class_id = c.id
+                LEFT JOIN fee_structures f ON s.class_id = f.class_id AND f.session = :session1 AND f.term = :term1
+                LEFT JOIN payments p ON s.id = p.student_id AND p.session = :session2 AND p.term = :term2
+                WHERE s.status = 'active'
+                GROUP BY s.id
+                HAVING expected_fee > 0 OR total_paid > 0
+                ORDER BY c.name ASC, s.first_name ASC";
+                
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([
+            ':session1' => $session, 
+            ':term1'    => $term,
+            ':session2' => $session,
+            ':term2'    => $term
+        ]);
+        
+        return $stmt->fetchAll();
     }
 
     public function getRecentStudents() {
