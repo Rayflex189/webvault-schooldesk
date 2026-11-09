@@ -4,7 +4,7 @@
 namespace App\Controllers;
 
 use App\Middleware\AuthMiddleware;
-use App\Services\SmtpMailer;
+use App\Services\SmsService;
 use Database;
 
 class CommunicationController {
@@ -39,6 +39,7 @@ class CommunicationController {
         $pdo = Database::getInstance();
         $recipients = [];
 
+        // Determine who gets the email
         if ($audience === 'all_parents') {
             $stmt = $pdo->query("
                 SELECT DISTINCT u.email, g.first_name, g.last_name 
@@ -73,7 +74,7 @@ class CommunicationController {
             redirect('admin/communication');
         }
 
-        $mailer = new SmtpMailer();
+        $mailer = new SmsService();
         $successCount = 0;
         $settings = get_settings();
         $schoolName = $settings['school_name'] ?? 'SchoolDesk';
@@ -85,31 +86,26 @@ class CommunicationController {
                 $message
             );
             
+            // Wrap in a nice HTML email template
             $htmlBody = "
                 <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 8px;'>
                     <h2 style='color: #1E3A8A; border-bottom: 2px solid #0EA5E9; padding-bottom: 10px;'>{$schoolName}</h2>
-                    <p style='font-size: 16px; color: #333;'>$personalizedMsg</p>
+                    <p style='font-size: 16px; color: #333; line-height: 1.6;'>$personalizedMsg</p>
                     <br>
+                    <hr style='border: none; border-top: 1px solid #eee;'>
                     <p style='font-size: 12px; color: #888;'>This email was sent from the {$schoolName} Administration Portal.</p>
                 </div>
             ";
 
             if ($mailer->send($r['email'], $subject, $htmlBody)) {
                 $successCount++;
-                // Log to database
-                $stmt = $pdo->prepare("INSERT INTO message_logs (recipient_type, recipient_email, message, status, sent_by) VALUES (?, ?, ?, ?, ?)");
-                $stmt->execute(['parent', $r['email'], $subject, 'sent', $_SESSION['user_id']]);
-            } else {
-                // Log failure
-                $stmt = $pdo->prepare("INSERT INTO message_logs (recipient_type, recipient_email, message, status, sent_by) VALUES (?, ?, ?, ?, ?)");
-                $stmt->execute(['parent', $r['email'], $subject, 'failed', $_SESSION['user_id']]);
             }
         }
 
         if ($successCount > 0) {
             $_SESSION['success'] = "Email sent successfully to {$successCount} recipients!";
         } else {
-            $_SESSION['error'] = "Failed to send emails. Please check your SMTP settings.";
+            $_SESSION['error'] = "Failed to send emails. Please check your SMTP credentials in the .env file.";
         }
         
         redirect('admin/communication');
