@@ -6,26 +6,16 @@ ob_start();
 <!-- Flash Messages -->
 <?php if(isset($_SESSION['success'])): ?>
     <div class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-6 flex items-center justify-between text-sm shadow-sm transition-all">
-        <div class="flex items-center gap-2">
-            <i data-lucide="check-circle" class="w-4 h-4"></i>
-            <?= e($_SESSION['success']) ?>
-        </div>
-        <button onclick="this.parentElement.remove()" class="text-green-500 hover:text-green-700">
-            <i data-lucide="x" class="w-4 h-4"></i>
-        </button>
+        <div class="flex items-center gap-2"><i data-lucide="check-circle" class="w-4 h-4"></i><?= e($_SESSION['success']) ?></div>
+        <button onclick="this.parentElement.remove()" class="text-green-500 hover:text-green-700"><i data-lucide="x" class="w-4 h-4"></i></button>
     </div>
     <?php unset($_SESSION['success']); ?>
 <?php endif; ?>
 
 <?php if(isset($_SESSION['error'])): ?>
     <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6 flex items-center justify-between text-sm shadow-sm transition-all">
-        <div class="flex items-center gap-2">
-            <i data-lucide="alert-circle" class="w-4 h-4"></i>
-            <?= e($_SESSION['error']) ?>
-        </div>
-        <button onclick="this.parentElement.remove()" class="text-red-500 hover:text-red-700">
-            <i data-lucide="x" class="w-4 h-4"></i>
-        </button>
+        <div class="flex items-center gap-2"><i data-lucide="alert-circle" class="w-4 h-4"></i><?= e($_SESSION['error']) ?></div>
+        <button onclick="this.parentElement.remove()" class="text-red-500 hover:text-red-700"><i data-lucide="x" class="w-4 h-4"></i></button>
     </div>
     <?php unset($_SESSION['error']); ?>
 <?php endif; ?>
@@ -53,7 +43,6 @@ ob_start();
         </div>
         <select name="class" class="border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-accent bg-white text-gray-700">
             <option value="">All Classes</option>
-            <!-- We will populate this dynamically later -->
             <option value="1">JSS 1A</option>
             <option value="2">JSS 1B</option>
         </select>
@@ -117,15 +106,22 @@ ob_start();
                                     </span>
                                 <?php endif; ?>
                             </td>
-                            <td class="px-6 py-4 text-right space-x-2">
-                                <!-- View Button -->
-                                <button class="text-gray-400 hover:text-primary transition-colors" title="View Details">
-                                    <i data-lucide="eye" class="w-4 h-4"></i>
-                                </button>
+                            
+                            <!-- Updated Actions Column -->
+                            <td class="px-6 py-4 text-right space-x-3">
                                 <!-- Edit Button -->
                                 <a href="/admin/students/edit?id=<?= $student['id'] ?>" class="text-gray-400 hover:text-primary transition-colors inline-block" title="Edit Student">
                                     <i data-lucide="edit" class="w-4 h-4"></i>
                                 </a>
+                                
+                                <!-- Delete Form -->
+                                <form action="/admin/students/delete" method="POST" class="inline-block" onsubmit="return confirm('Are you sure you want to delete this student? This will permanently remove their login account, scores, and attendance records.');">
+                                    <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
+                                    <input type="hidden" name="id" value="<?= $student['id'] ?>">
+                                    <button type="submit" class="text-gray-400 hover:text-red-500 transition-colors" title="Delete Student">
+                                        <i data-lucide="trash" class="w-4 h-4"></i>
+                                    </button>
+                                </form>
                             </td>
                         </tr>
                     <?php endforeach; ?>
