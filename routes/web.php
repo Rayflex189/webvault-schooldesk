@@ -10,6 +10,7 @@ use App\Controllers\ParentController;
 use App\Controllers\SubjectController;
 use App\Controllers\ClassController;
 use App\Controllers\BookController;
+use App\Controllers\TeacherBookController;
 use App\Controllers\TeacherAssignmentController;
 use App\Controllers\AttendanceController;
 use App\Controllers\ExamController;
@@ -204,6 +205,14 @@ return [
         $controller = new BookController();
         $controller->delete();
     },
+    'admin/books/recommendations' => function() {
+        $controller = new BookController();
+        $controller->recommendations();
+    },
+    'admin/books/recommendations/approve' => function() {
+        $controller = new BookController();
+        $controller->approveRecommendation();
+    },
 
     // Admin: Teacher Assignments
     'admin/assignments' => function() {
@@ -355,6 +364,20 @@ return [
         $controller->store();
     },
 
+    // Teacher: Booklist & Recommendations
+    'teacher/books' => function() {
+        $controller = new TeacherBookController();
+        $controller->index();
+    },
+    'teacher/books/recommend' => function() {
+        $controller = new TeacherBookController();
+        $controller->recommend();
+    },
+    'teacher/books/recommend/store' => function() {
+        $controller = new TeacherBookController();
+        $controller->storeRecommendation();
+    },
+
     // ==========================================
     // Parent Portal Routes
     // ==========================================
@@ -370,6 +393,10 @@ return [
         $controller = new ParentDashboardController();
         $controller->fees();
     },
+    'parent/books' => function() {
+        $controller = new ParentDashboardController();
+        $controller->books();
+    },
 
     // ==========================================
     // Student Portal Routes
@@ -381,5 +408,9 @@ return [
     'student/report-card' => function() {
         $controller = new StudentDashboardController();
         $controller->reportCard();
+    },
+    'student/books' => function() {
+        $controller = new StudentDashboardController();
+        $controller->books();
     }
 ];
