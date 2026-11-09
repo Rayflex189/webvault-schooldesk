@@ -18,8 +18,9 @@ class DashboardController {
         $session = $settings['current_session'] ?? '2024/2025';
         $term = $settings['current_term'] ?? 'First Term';
         
-        // Stats
+        // Stats & Analysis
         $stats = $model->getStats($session, $term);
+        $feesAnalysis = $model->getFeesAnalysis($session, $term);
         $recentStudents = $model->getRecentStudents();
         
         // Chart Data
@@ -28,6 +29,7 @@ class DashboardController {
 
         view('admin.dashboard', [
             'stats' => $stats,
+            'feesAnalysis' => $feesAnalysis,
             'recentStudents' => $recentStudents,
             'active_session' => $session,
             'active_term' => $term,
