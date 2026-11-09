@@ -1,4 +1,6 @@
 <?php
+// app/Controllers/BookController.php
+
 namespace App\Controllers;
 
 use App\Models\Book;
@@ -6,10 +8,15 @@ use App\Middleware\AuthMiddleware;
 
 class BookController {
     
+    /**
+     * Display the booklist for a specific class
+     */
     public function index() {
         AuthMiddleware::adminOnly();
         $model = new Book();
         $classes = $model->getClasses();
+        
+        // Default to the first class if none is selected
         $selectedClass = $_GET['class_id'] ?? $classes[0]['id'] ?? null;
         $books = $selectedClass ? $model->getByClass($selectedClass) : [];
 
@@ -20,6 +27,9 @@ class BookController {
         ]);
     }
 
+    /**
+     * Add a new book to the official list
+     */
     public function store() {
         AuthMiddleware::adminOnly();
         verify_csrf($_POST['csrf_token'] ?? '');
@@ -36,6 +46,9 @@ class BookController {
         redirect("admin/books?class_id=" . $_POST['class_id']);
     }
 
+    /**
+     * Delete a book from the official list
+     */
     public function delete() {
         AuthMiddleware::adminOnly();
         verify_csrf($_POST['csrf_token'] ?? '');
@@ -43,5 +56,30 @@ class BookController {
         $model->delete($_POST['id']);
         $_SESSION['success'] = "Book removed.";
         redirect("admin/books?class_id=" . $_POST['class_id']);
+    }
+
+    /**
+     * Display pending teacher recommendations
+     */
+    public function recommendations() {
+        AuthMiddleware::adminOnly();
+        $model = new Book();
+        $recommendations = $model->getPendingRecommendations();
+        
+        view('admin.books.recommendations', ['recommendations' => $recommendations]);
+    }
+
+    /**
+     * Approve a recommendation and move it to the official list
+     */
+    public function approveRecommendation() {
+        AuthMiddleware::adminOnly();
+        verify_csrf($_POST['csrf_token'] ?? '');
+        
+        $model = new Book();
+        $model->approveRecommendation($_POST['id']);
+        
+        $_SESSION['success'] = "Book recommendation approved and added to class list!";
+        redirect('admin/books/recommendations');
     }
 }
