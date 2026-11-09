@@ -89,6 +89,10 @@ return [
         $controller = new StudentController();
         $controller->update();
     },
+    'admin/students/delete' => function() {
+        $controller = new StudentController();
+        $controller->destroy();
+    },
 
     // Admin: Teacher Management
     'admin/teachers' => function() {
