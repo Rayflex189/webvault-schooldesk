@@ -8,9 +8,6 @@ use App\Middleware\AuthMiddleware;
 
 class FinanceController {
     
-    /**
-     * Show the main finance dashboard/ledger
-     */
     public function index() {
         AuthMiddleware::adminOnly();
         
@@ -27,9 +24,6 @@ class FinanceController {
         ]);
     }
 
-    /**
-     * Show the form to record a payment
-     */
     public function create() {
         AuthMiddleware::adminOnly();
         $model = new Finance();
@@ -39,14 +33,10 @@ class FinanceController {
         ]);
     }
 
-    /**
-     * Store the payment in the database
-     */
     public function store() {
         AuthMiddleware::adminOnly();
         verify_csrf($_POST['csrf_token'] ?? '');
         
-        // 1. Basic Validation
         $required = ['student_id', 'amount', 'reference', 'term', 'session'];
         foreach ($required as $field) {
             if (empty($_POST[$field])) {
@@ -61,7 +51,6 @@ class FinanceController {
             redirect('admin/finance/create');
         }
 
-        // 2. Check Balance (Prevent overpayment for now, unless it's a credit)
         $model = new Finance();
         $balanceInfo = $model->getStudentBalance($_POST['student_id'], $_POST['session'], $_POST['term']);
         
@@ -70,7 +59,6 @@ class FinanceController {
             redirect('admin/finance/create');
         }
 
-        // 3. Record Payment
         $paymentData = $_POST;
         $paymentData['recorded_by'] = $_SESSION['user_id'];
         
@@ -83,5 +71,60 @@ class FinanceController {
             $_SESSION['error'] = "Failed to record payment. Reference might be a duplicate.";
             redirect('admin/finance/create');
         }
+    }
+
+    public function manageFees() {
+        AuthMiddleware::adminOnly();
+        $model = new Finance();
+        
+        $settings = get_settings();
+        $session = $_GET['session'] ?? $settings['current_session'] ?? '2024/2025';
+        $term = $_GET['term'] ?? $settings['current_term'] ?? 'First Term';
+        
+        $classes = $model->getClasses();
+        $structures = $model->getFeeStructures($session, $term);
+        
+        $feeMap = [];
+        foreach($structures as $s) {
+            $feeMap[$s['class_id']] = $s['amount'];
+        }
+
+        view('admin.finance.manage_fees', [
+            'classes' => $classes,
+            'feeMap' => $feeMap,
+            'session' => $session,
+            'term' => $term
+        ]);
+    }
+
+    public function saveFees() {
+        AuthMiddleware::adminOnly();
+        verify_csrf($_POST['csrf_token'] ?? '');
+        
+        $session = $_POST['session'] ?? null;
+        $term = $_POST['term'] ?? null;
+        $amounts = $_POST['amounts'] ?? [];
+
+        if (!$session || !$term || empty($amounts)) {
+            redirect('admin/finance/manage-fees');
+        }
+
+        $model = new Finance();
+        $successCount = 0;
+        
+        foreach ($amounts as $classId => $amount) {
+            if (is_numeric($amount) && $amount >= 0) {
+                $model->saveFeeStructure([
+                    'class_id' => $classId,
+                    'session' => $session,
+                    'term' => $term,
+                    'amount' => $amount
+                ]);
+                $successCount++;
+            }
+        }
+
+        $_SESSION['success'] = "Fee structures updated for {$successCount} classes!";
+        redirect("admin/finance/manage-fees?session=" . urlencode($session) . "&term=" . urlencode($term));
     }
 }
