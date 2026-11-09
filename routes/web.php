@@ -9,6 +9,7 @@ use App\Controllers\TeacherController;
 use App\Controllers\ParentController;
 use App\Controllers\SubjectController;
 use App\Controllers\ClassController;
+use App\Controllers\BookController;
 use App\Controllers\TeacherAssignmentController;
 use App\Controllers\AttendanceController;
 use App\Controllers\ExamController;
@@ -188,6 +189,20 @@ return [
     'admin/classes/subjects/update' => function() {
         $controller = new ClassController();
         $controller->updateSubjects();
+    },
+
+    // Admin: Booklist Management
+    'admin/books' => function() {
+        $controller = new BookController();
+        $controller->index();
+    },
+    'admin/books/store' => function() {
+        $controller = new BookController();
+        $controller->store();
+    },
+    'admin/books/delete' => function() {
+        $controller = new BookController();
+        $controller->delete();
     },
 
     // Admin: Teacher Assignments
