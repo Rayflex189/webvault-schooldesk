@@ -199,4 +199,95 @@ class ParentDashboardController {
 
         view('parent.books', ['childrenBooks' => $childrenBooks]);
     }
+
+    /**
+     * Initiate Paystack Payment
+     */
+    public function initiatePayment() {
+        ParentMiddleware::handle();
+        verify_csrf($_POST['csrf_token'] ?? '');
+
+        $studentId = $_POST['student_id'];
+        $amount = (float)$_POST['amount'];
+        $pdo = Database::getInstance();
+        $userId = $_SESSION['user_id'];
+
+        // Security: Verify child belongs to parent
+        $stmt = $pdo->prepare("SELECT COUNT(*) FROM student_guardians sg JOIN guardians g ON sg.guardian_id = g.id WHERE g.user_id = ? AND sg.student_id = ?");
+        $stmt->execute([$userId, $studentId]);
+        if ($stmt->fetchColumn() == 0) die("403 - Unauthorized.");
+
+        // Get parent email
+        $stmt = $pdo->prepare("SELECT email FROM users WHERE id = ?");
+        $stmt->execute([$userId]);
+        $user = $stmt->fetch();
+
+        $reference = 'WVS-' . strtoupper(bin2hex(random_bytes(4))) . '-' . time();
+        
+        $paystack = new \App\Services\PaystackService();
+        $callbackUrl = env('APP_URL') . "/parent/payment/callback?student_id={$studentId}";
+        
+        $response = $paystack->initialize($user['email'], $amount, $reference, $callbackUrl);
+
+        if ($response && $response['status']) {
+            // Redirect to Paystack checkout page
+            header("Location: " . $response['data']['authorization_url']);
+            exit;
+        } else {
+            $_SESSION['error'] = "Payment initialization failed. Check API keys.";
+            redirect('parent/fees?student_id=' . $studentId);
+        }
+    }
+
+    /**
+     * Verify Paystack Callback
+     */
+    public function verifyPayment() {
+        ParentMiddleware::handle();
+        
+        $reference = $_GET['reference'] ?? null;
+        $studentId = $_GET['student_id'] ?? null;
+
+        if (!$reference || !$studentId) {
+            redirect('parent/dashboard');
+        }
+
+        $paystack = new \App\Services\PaystackService();
+        $response = $paystack->verify($reference);
+
+        if ($response && $response['status'] && $response['data']['status'] === 'success') {
+            
+            // SECURITY: Do NOT trust the URL for the amount. Get it from the verified Paystack response.
+            // Paystack returns amount in kobo, so we divide by 100.
+            $verifiedAmount = $response['data']['amount'] / 100; 
+
+            $pdo = Database::getInstance();
+            $settings = get_settings();
+            
+            try {
+                $pdo->beginTransaction();
+                
+                $stmt = $pdo->prepare("INSERT INTO payments (student_id, amount, payment_method, reference, term, session, recorded_by) VALUES (?, ?, 'Paystack', ?, ?, ?, ?)");
+                // recorded_by is set to parent's user_id
+                $stmt->execute([
+                    $studentId, 
+                    $verifiedAmount, 
+                    $reference, 
+                    $settings['current_term'], 
+                    $settings['current_session'], 
+                    $_SESSION['user_id']
+                ]);
+                
+                $pdo->commit();
+                $_SESSION['success'] = "Payment of ₦" . number_format($verifiedAmount, 2) . " was successful!";
+            } catch (\Exception $e) {
+                $pdo->rollBack();
+                $_SESSION['error'] = "Payment verified but database error occurred.";
+            }
+        } else {
+            $_SESSION['error'] = "Payment verification failed or was cancelled.";
+        }
+
+        redirect('parent/fees?student_id=' . $studentId);
+    }
 }
