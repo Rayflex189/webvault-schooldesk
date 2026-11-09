@@ -8,9 +8,6 @@ use PDO;
 
 class Dashboard {
     
-    /**
-     * Get the top-level statistics for the dashboard cards
-     */
     public function getStats($session = '2024/2025', $term = 'First Term') {
         $pdo = Database::getInstance();
         
@@ -20,7 +17,7 @@ class Dashboard {
         // 2. Total Teachers
         $teachers = $pdo->query("SELECT COUNT(*) FROM teachers WHERE status = 'active'")->fetchColumn();
         
-        // 3. Total Parents (Users with role_id = 3)
+        // 3. Total Parents
         $parents = $pdo->query("SELECT COUNT(*) FROM users WHERE role_id = 3 AND status = 'active'")->fetchColumn();
         
         // 4. Attendance Today
@@ -28,23 +25,36 @@ class Dashboard {
         $presentToday = $pdo->query("SELECT COUNT(*) FROM attendance WHERE date = '$today' AND status = 'present'")->fetchColumn();
         $attendancePercentage = $students > 0 ? round(($presentToday / $students) * 100) : 0;
         
-        // 5. Total Fees Collected (Current Term)
-        $stmt = $pdo->prepare("SELECT SUM(amount) FROM payments WHERE session = ? AND term = ?");
+        // 5. Finance Stats (Robust Query using TRIM)
+        // Total Collected
+        $stmt = $pdo->prepare("SELECT SUM(amount) FROM payments WHERE TRIM(session) = TRIM(?) AND TRIM(term) = TRIM(?)");
         $stmt->execute([$session, $term]);
         $feesCollected = $stmt->fetchColumn() ?? 0;
+
+        // Total Expected (Sum of all active students' class fees)
+        $stmt = $pdo->prepare("
+            SELECT SUM(f.amount) 
+            FROM students s 
+            JOIN fee_structures f ON s.class_id = f.class_id 
+            WHERE TRIM(f.session) = TRIM(?) AND TRIM(f.term) = TRIM(?) AND s.status = 'active'
+        ");
+        $stmt->execute([$session, $term]);
+        $totalExpected = $stmt->fetchColumn() ?? 0;
+
+        // Outstanding Balance
+        $totalOutstanding = $totalExpected - $feesCollected;
 
         return [
             'students' => $students,
             'teachers' => $teachers,
-            'parents' => $parents, // <-- Added
+            'parents' => $parents,
             'attendance_percentage' => $attendancePercentage,
-            'fees_collected' => $feesCollected
+            'fees_collected' => $feesCollected,
+            'total_expected' => $totalExpected,
+            'total_outstanding' => $totalOutstanding
         ];
     }
 
-    /**
-     * Get recent student admissions
-     */
     public function getRecentStudents() {
         $pdo = Database::getInstance();
         return $pdo->query("
@@ -56,9 +66,6 @@ class Dashboard {
         ")->fetchAll();
     }
 
-    /**
-     * Get student count grouped by class
-     */
     public function getStudentDistribution() {
         $pdo = Database::getInstance();
         $sql = "SELECT c.name AS class_name, COUNT(s.id) AS student_count 
@@ -69,9 +76,6 @@ class Dashboard {
         return $pdo->query($sql)->fetchAll();
     }
 
-    /**
-     * Get total present vs absent for the last 7 days
-     */
     public function getAttendanceTrend() {
         $pdo = Database::getInstance();
         $sql = "SELECT date, 
