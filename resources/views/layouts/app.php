@@ -90,10 +90,12 @@ $settings = get_settings();
                 <a href="/admin/classes" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/admin/classes') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
                     <i data-lucide="school" class="w-5 h-5"></i> Classes
                 </a>
-
-            <a href="/admin/books" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/admin/books') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
-    <i data-lucide="book-open" class="w-5 h-5"></i> Booklist
-            </a>
+                <a href="/admin/books" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/admin/books') !== false && strpos($_SERVER['REQUEST_URI'], '/recommendations') === false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
+                    <i data-lucide="book-open" class="w-5 h-5"></i> Booklist
+                </a>
+                <a href="/admin/books/recommendations" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/admin/books/recommendations') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
+                    <i data-lucide="bookmark" class="w-5 h-5"></i> Book Requests
+                </a>
                 <a href="/admin/subjects" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/admin/subjects') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
                     <i data-lucide="book" class="w-5 h-5"></i> Subjects
                 </a>
@@ -130,6 +132,9 @@ $settings = get_settings();
                 <a href="/teacher/exams" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/teacher/exams') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
                     <i data-lucide="file-edit" class="w-5 h-5"></i> Enter Scores
                 </a>
+                <a href="/teacher/books" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/teacher/books') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
+                    <i data-lucide="book-open" class="w-5 h-5"></i> Class Books
+                </a>
 
             <?php elseif(isset($_SESSION['role_id']) && $_SESSION['role_id'] == 3): ?>
                 <!-- PARENT MENU -->
@@ -137,12 +142,18 @@ $settings = get_settings();
                 <a href="/parent/dashboard" class="flex items-center gap-3 px-3 py-2.5 <?= $_SERVER['REQUEST_URI'] == '/parent/dashboard' ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
                     <i data-lucide="home" class="w-5 h-5"></i> My Dashboard
                 </a>
+                <a href="/parent/books" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/parent/books') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
+                    <i data-lucide="book" class="w-5 h-5"></i> School Booklist
+                </a>
 
             <?php elseif(isset($_SESSION['role_id']) && $_SESSION['role_id'] == 4): ?>
                 <!-- STUDENT MENU -->
                 <p class="px-3 text-xs font-semibold text-blue-300 uppercase tracking-wider mb-2 mt-2">Student Portal</p>
                 <a href="/student/dashboard" class="flex items-center gap-3 px-3 py-2.5 <?= $_SERVER['REQUEST_URI'] == '/student/dashboard' ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
                     <i data-lucide="home" class="w-5 h-5"></i> My Dashboard
+                </a>
+                <a href="/student/books" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/student/books') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
+                    <i data-lucide="book" class="w-5 h-5"></i> My Booklist
                 </a>
             <?php endif; ?>
         </nav>
