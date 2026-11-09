@@ -300,6 +300,11 @@ return [
         $controller = new FinanceController();
         $controller->saveFees();
     },
+    // NEW: Audit Trail
+    'admin/finance/audit-trail' => function() {
+        $controller = new FinanceController();
+        $controller->auditTrail();
+    },
 
     // Admin: Announcements
     'admin/announcements' => function() {
