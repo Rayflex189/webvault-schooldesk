@@ -408,6 +408,16 @@ return [
         $controller = new ParentDashboardController();
         $controller->books();
     },
+    
+    // Parent: Paystack Payments
+    'parent/payment/initiate' => function() {
+        $controller = new ParentDashboardController();
+        $controller->initiatePayment();
+    },
+    'parent/payment/callback' => function() {
+        $controller = new ParentDashboardController();
+        $controller->verifyPayment();
+    },
 
     // ==========================================
     // Student Portal Routes
