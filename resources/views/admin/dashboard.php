@@ -93,7 +93,7 @@ ob_start();
         </div>
     </div>
 
-    <!-- Card 4: Fees (Upgraded to show Collected & Outstanding) -->
+    <!-- Card 4: Fees (Now showing detailed stats) -->
     <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex flex-col justify-between col-span-2 lg:col-span-1">
         <div class="flex items-start justify-between">
             <div class="p-2 bg-emerald-50 text-emerald-600 rounded-lg">
@@ -176,8 +176,9 @@ ob_start();
     </div>
 </div>
 
-<!-- Second Row of Charts -->
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+<!-- Second Row: Detailed Fee Analysis & Student Chart -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+    
     <!-- Student Distribution Bar Chart -->
     <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 flex flex-col">
         <div class="flex justify-between items-center mb-6">
@@ -187,6 +188,61 @@ ob_start();
             <canvas id="studentsChart"></canvas>
         </div>
     </div>
+
+    <!-- NEW: Detailed Fee Analysis List -->
+    <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden flex flex-col">
+        <div class="p-6 border-b border-gray-200 flex justify-between items-center">
+            <div>
+                <h2 class="text-lg font-bold text-gray-800">Fee Collection Status</h2>
+                <p class="text-xs text-gray-500">Partial & Full Payments for <?= htmlspecialchars($active_term) ?></p>
+            </div>
+            <a href="/admin/finance" class="text-xs text-primary font-bold hover:underline">Full Ledger</a>
+        </div>
+        <div class="flex-1 overflow-y-auto max-h-72">
+            <table class="w-full text-left border-collapse">
+                <thead class="bg-gray-50 sticky top-0">
+                    <tr class="text-gray-500 text-xs uppercase tracking-wider border-b border-gray-200">
+                        <th class="px-4 py-3 font-medium">Student</th>
+                        <th class="px-4 py-3 font-medium text-right">Paid</th>
+                        <th class="px-4 py-3 font-medium text-center">Status</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100 text-sm">
+                    <?php if(empty($feesAnalysis)): ?>
+                        <tr>
+                            <td colspan="3" class="px-4 py-8 text-center text-gray-500">No payments recorded.</td>
+                        </tr>
+                    <?php else: ?>
+                        <?php foreach($feesAnalysis as $fee): 
+                            $balance = $fee['expected_fee'] - $fee['total_paid'];
+                        ?>
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="px-4 py-3">
+                                    <p class="font-medium text-gray-900"><?= e($fee['first_name'] . ' ' . $fee['last_name']) ?></p>
+                                    <p class="text-[10px] text-gray-500"><?= e($fee['class_name']) ?></p>
+                                </td>
+                                <td class="px-4 py-3 text-right font-medium text-green-600">
+                                    ₦<?= number_format($fee['total_paid'], 2) ?>
+                                </td>
+                                <td class="px-4 py-3 text-center">
+                                    <?php if($fee['expected_fee'] == 0): ?>
+                                        <span class="text-[10px] text-gray-400">No Fee Set</span>
+                                    <?php elseif($balance <= 0): ?>
+                                        <span class="bg-green-100 text-green-700 px-2 py-0.5 rounded text-[10px] font-bold border border-green-200">Full</span>
+                                    <?php elseif($fee['total_paid'] > 0): ?>
+                                        <span class="bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded text-[10px] font-bold border border-yellow-200">Partial</span>
+                                    <?php else: ?>
+                                        <span class="bg-red-100 text-red-700 px-2 py-0.5 rounded text-[10px] font-bold border border-red-200">Unpaid</span>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
 </div>
 
 <!-- Chart.js CDN -->
