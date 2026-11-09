@@ -9,6 +9,9 @@ use Database;
 
 class StudentDashboardController {
     
+    /**
+     * Show the Student Dashboard
+     */
     public function index() {
         StudentMiddleware::handle();
         
@@ -39,13 +42,17 @@ class StudentDashboardController {
         ]);
     }
 
+    /**
+     * Securely generate a report card for the logged-in student
+     */
     public function reportCard() {
         StudentMiddleware::handle();
         
         $pdo = Database::getInstance();
         $userId = $_SESSION['user_id'];
-        $session = $_GET['session'] ?? '2024/2025';
-        $term = $_GET['term'] ?? 'First Term';
+        $settings = get_settings();
+        $session = $_GET['session'] ?? $settings['current_session'] ?? '2024/2025';
+        $term = $_GET['term'] ?? $settings['current_term'] ?? 'First Term';
 
         // 1. Get Student Profile securely
         $stmt = $pdo->prepare("SELECT id, class_id FROM students WHERE user_id = ?");
@@ -69,6 +76,7 @@ class StudentDashboardController {
         
         $position = count($results) > 0 ? $reportModel->calculatePosition($studentId, $classId, $session, $term) : "N/A";
 
+        // 3. Render the standalone print view
         view('admin.reports.print', [
             'student' => $student,
             'results' => $results,
@@ -78,5 +86,26 @@ class StudentDashboardController {
             'totalSubjects' => count($results),
             'position' => $position
         ]);
+    }
+
+    /**
+     * View the booklist for the student's class
+     */
+    public function books() {
+        StudentMiddleware::handle();
+        $pdo = Database::getInstance();
+        
+        $stmt = $pdo->prepare("SELECT class_id, first_name, last_name FROM students WHERE user_id = ?");
+        $stmt->execute([$_SESSION['user_id']]);
+        $student = $stmt->fetch();
+
+        if (!$student) {
+            die("Student profile not found.");
+        }
+
+        $bookModel = new \App\Models\Book();
+        $books = $bookModel->getByClass($student['class_id']);
+
+        view('student.books', ['books' => $books]);
     }
 }
