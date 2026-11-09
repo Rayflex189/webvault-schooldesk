@@ -8,6 +8,9 @@ use App\Middleware\AuthMiddleware;
 
 class FinanceController {
     
+    /**
+     * Show the main finance dashboard/ledger
+     */
     public function index() {
         AuthMiddleware::adminOnly();
         
@@ -24,6 +27,9 @@ class FinanceController {
         ]);
     }
 
+    /**
+     * Show the form to record a payment
+     */
     public function create() {
         AuthMiddleware::adminOnly();
         $model = new Finance();
@@ -33,6 +39,9 @@ class FinanceController {
         ]);
     }
 
+    /**
+     * Store the payment in the database
+     */
     public function store() {
         AuthMiddleware::adminOnly();
         verify_csrf($_POST['csrf_token'] ?? '');
@@ -73,6 +82,9 @@ class FinanceController {
         }
     }
 
+    /**
+     * Show the form to manage fee structures per class
+     */
     public function manageFees() {
         AuthMiddleware::adminOnly();
         $model = new Finance();
@@ -97,6 +109,9 @@ class FinanceController {
         ]);
     }
 
+    /**
+     * Save the fee structures
+     */
     public function saveFees() {
         AuthMiddleware::adminOnly();
         verify_csrf($_POST['csrf_token'] ?? '');
@@ -126,5 +141,17 @@ class FinanceController {
 
         $_SESSION['success'] = "Fee structures updated for {$successCount} classes!";
         redirect("admin/finance/manage-fees?session=" . urlencode($session) . "&term=" . urlencode($term));
+    }
+
+    /**
+     * Show the Audit Trail of all transactions
+     */
+    public function auditTrail() {
+        AuthMiddleware::adminOnly();
+        
+        $model = new Finance();
+        $transactions = $model->getAllTransactions();
+        
+        view('admin.finance.audit_trail', ['transactions' => $transactions]);
     }
 }
