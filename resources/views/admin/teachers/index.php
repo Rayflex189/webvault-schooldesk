@@ -6,10 +6,7 @@ ob_start();
 <!-- Flash Messages -->
 <?php if(isset($_SESSION['success'])): ?>
     <div class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-6 flex items-center justify-between text-sm shadow-sm">
-        <div class="flex items-center gap-2">
-            <i data-lucide="check-circle" class="w-4 h-4"></i>
-            <?= e($_SESSION['success']) ?>
-        </div>
+        <div class="flex items-center gap-2"><i data-lucide="check-circle" class="w-4 h-4"></i><?= e($_SESSION['success']) ?></div>
         <button onclick="this.parentElement.remove()" class="text-green-500 hover:text-green-700"><i data-lucide="x" class="w-4 h-4"></i></button>
     </div>
     <?php unset($_SESSION['success']); ?>
@@ -17,16 +14,12 @@ ob_start();
 
 <?php if(isset($_SESSION['error'])): ?>
     <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6 flex items-center justify-between text-sm shadow-sm">
-        <div class="flex items-center gap-2">
-            <i data-lucide="alert-circle" class="w-4 h-4"></i>
-            <?= e($_SESSION['error']) ?>
-        </div>
+        <div class="flex items-center gap-2"><i data-lucide="alert-circle" class="w-4 h-4"></i><?= e($_SESSION['error']) ?></div>
         <button onclick="this.parentElement.remove()" class="text-red-500 hover:text-red-700"><i data-lucide="x" class="w-4 h-4"></i></button>
     </div>
     <?php unset($_SESSION['error']); ?>
 <?php endif; ?>
 
-<!-- Page Header -->
 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
     <div>
         <h1 class="text-2xl font-bold text-gray-800">Teachers</h1>
@@ -34,12 +27,10 @@ ob_start();
     </div>
     
     <a href="/admin/teachers/create" class="bg-primary hover:bg-blue-900 text-white px-4 py-2.5 rounded-lg text-sm font-medium flex items-center gap-2 shadow-sm transition-colors w-full sm:w-auto justify-center">
-        <i data-lucide="plus" class="w-4 h-4"></i>
-        Add New Teacher
+        <i data-lucide="plus" class="w-4 h-4"></i> Add New Teacher
     </a>
 </div>
 
-<!-- Data Table -->
 <div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
     <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse">
@@ -83,13 +74,32 @@ ob_start();
                             </td>
                             <td class="px-6 py-4 text-gray-600"><?= e($teacher['qualification']) ?></td>
                             <td class="px-6 py-4">
-                                <span class="flex items-center gap-1.5 text-green-600 text-xs font-medium">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span> Active
-                                </span>
+                                <?php if($teacher['status'] === 'active'): ?>
+                                    <span class="flex items-center gap-1.5 text-green-600 text-xs font-medium">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span> Active
+                                    </span>
+                                <?php else: ?>
+                                    <span class="flex items-center gap-1.5 text-gray-500 text-xs font-medium">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-gray-400"></span> Inactive
+                                    </span>
+                                <?php endif; ?>
                             </td>
-                            <td class="px-6 py-4 text-right space-x-2">
-                                <button class="text-gray-400 hover:text-primary transition-colors"><i data-lucide="eye" class="w-4 h-4"></i></button>
-                                <button class="text-gray-400 hover:text-primary transition-colors"><i data-lucide="edit" class="w-4 h-4"></i></button>
+                            
+                            <!-- Updated Actions Column -->
+                            <td class="px-6 py-4 text-right space-x-3">
+                                <!-- Edit Button -->
+                                <a href="/admin/teachers/edit?id=<?= $teacher['id'] ?>" class="text-gray-400 hover:text-primary transition-colors inline-block" title="Edit Teacher">
+                                    <i data-lucide="edit" class="w-4 h-4"></i>
+                                </a>
+                                
+                                <!-- Delete Form -->
+                                <form action="/admin/teachers/delete" method="POST" class="inline-block" onsubmit="return confirm('Are you sure you want to delete this teacher? This will also delete their login account.');">
+                                    <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
+                                    <input type="hidden" name="id" value="<?= $teacher['id'] ?>">
+                                    <button type="submit" class="text-gray-400 hover:text-red-500 transition-colors" title="Delete Teacher">
+                                        <i data-lucide="trash" class="w-4 h-4"></i>
+                                    </button>
+                                </form>
                             </td>
                         </tr>
                     <?php endforeach; ?>
