@@ -13,7 +13,7 @@ use Database;
 class BehaviorController {
     
     // ==========================================
-    // TEACHER METHODS
+    // TEACHER METHODS (Daily Assessment)
     // ==========================================
     
     public function teacherIndex() {
@@ -69,10 +69,10 @@ class BehaviorController {
             'type'        => $_POST['type'],
             'title'       => $_POST['title'],
             'description' => $_POST['description'],
-            'date'        => date('Y-m-d')
+            'date'        => date('Y-m-d') // Daily assessment - logs today's date
         ]);
 
-        $_SESSION['success'] = "Behavior log recorded successfully!";
+        $_SESSION['success'] = "Daily behavior assessment recorded successfully!";
         redirect('teacher/behavior');
     }
 
