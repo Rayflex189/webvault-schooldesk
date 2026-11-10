@@ -76,9 +76,9 @@ $settings = get_settings();
                 <a href="/admin/announcements" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/admin/announcements') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
                     <i data-lucide="megaphone" class="w-5 h-5"></i> Announcements
                 </a>
-            <a href="/admin/communication" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/admin/communication') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
-    <i data-lucide="message-square" class="w-5 h-5"></i> Communication
-            </a>
+                <a href="/admin/communication" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/admin/communication') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
+                    <i data-lucide="message-square" class="w-5 h-5"></i> Communication
+                </a>
                 <a href="/admin/students" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/admin/students') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
                     <i data-lucide="users" class="w-5 h-5"></i> Students
                 </a>
@@ -111,9 +111,9 @@ $settings = get_settings();
                 <a href="/admin/exams" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/admin/exams') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
                     <i data-lucide="file-edit" class="w-5 h-5"></i> Exams
                 </a>
-            <a href="/admin/timetables" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/admin/timetables') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
-    <i data-lucide="clock" class="w-5 h-5"></i> Timetable
-            </a>
+                <a href="/admin/timetables" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/admin/timetables') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
+                    <i data-lucide="clock" class="w-5 h-5"></i> Timetable
+                </a>
                 <a href="/admin/reports" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/admin/reports') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
                     <i data-lucide="printer" class="w-5 h-5"></i> Report Cards
                 </a>
@@ -141,6 +141,9 @@ $settings = get_settings();
                 <a href="/teacher/books" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/teacher/books') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
                     <i data-lucide="book-open" class="w-5 h-5"></i> Class Books
                 </a>
+                <a href="/teacher/timetable" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/teacher/timetable') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
+                    <i data-lucide="clock" class="w-5 h-5"></i> My Timetable
+                </a>
 
             <?php elseif(isset($_SESSION['role_id']) && $_SESSION['role_id'] == 3): ?>
                 <!-- PARENT MENU -->
@@ -151,6 +154,9 @@ $settings = get_settings();
                 <a href="/parent/books" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/parent/books') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
                     <i data-lucide="book" class="w-5 h-5"></i> School Booklist
                 </a>
+                <a href="/parent/timetable" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/parent/timetable') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
+                    <i data-lucide="clock" class="w-5 h-5"></i> Timetable
+                </a>
 
             <?php elseif(isset($_SESSION['role_id']) && $_SESSION['role_id'] == 4): ?>
                 <!-- STUDENT MENU -->
@@ -160,6 +166,9 @@ $settings = get_settings();
                 </a>
                 <a href="/student/books" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/student/books') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
                     <i data-lucide="book" class="w-5 h-5"></i> My Booklist
+                </a>
+                <a href="/student/timetable" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/student/timetable') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
+                    <i data-lucide="clock" class="w-5 h-5"></i> My Timetable
                 </a>
             <?php endif; ?>
         </nav>
@@ -243,7 +252,6 @@ $settings = get_settings();
                         <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
                     </button>
                     
-                    <!-- Fixed width on mobile to prevent overflowing left -->
                     <div x-cloak x-show="openNotifications" x-transition 
                          class="fixed top-[70px] left-4 right-4 sm:absolute sm:top-full sm:left-auto sm:right-0 sm:mt-2 sm:w-80 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-50">
                         <div class="px-4 py-2 border-b border-gray-100 mb-2 flex justify-between items-center">
@@ -279,7 +287,6 @@ $settings = get_settings();
                         <i data-lucide="chevron-down" class="w-4 h-4 hidden sm:block"></i>
                     </button>
                     
-                    <!-- Fixed width on mobile to prevent overflowing -->
                     <div x-cloak x-show="openUser" x-transition 
                          class="fixed top-[70px] left-4 right-4 sm:absolute sm:top-full sm:left-auto sm:right-0 sm:mt-2 sm:w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-50">
                         <a href="/profile" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2">
