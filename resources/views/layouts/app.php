@@ -68,7 +68,7 @@ $settings = get_settings();
 
         <nav class="flex-1 overflow-y-auto py-4 px-3 space-y-1">
             <?php if(isset($_SESSION['role_id']) && $_SESSION['role_id'] == 1): ?>
-                <!-- ADMIN MENU -->
+                <!-- ================= ADMIN MENU ================= -->
                 <p class="px-3 text-xs font-semibold text-blue-300 uppercase tracking-wider mb-2 mt-2">Management</p>
                 <a href="/admin/dashboard" class="flex items-center gap-3 px-3 py-2.5 <?= $_SERVER['REQUEST_URI'] == '/admin/dashboard' ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
                     <i data-lucide="layout-dashboard" class="w-5 h-5"></i> Dashboard
@@ -121,16 +121,21 @@ $settings = get_settings();
                     <i data-lucide="printer" class="w-5 h-5"></i> Report Cards
                 </a>
 
-                <p class="px-3 text-xs font-semibold text-blue-300 uppercase tracking-wider mb-2 mt-6">Finance & System</p>
+                <p class="px-3 text-xs font-semibold text-blue-300 uppercase tracking-wider mb-2 mt-6">Finance & Operations</p>
                 <a href="/admin/finance" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/admin/finance') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
                     <i data-lucide="wallet" class="w-5 h-5"></i> Fees & Payments
                 </a>
+                <a href="/admin/transport" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/admin/transport') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
+                    <i data-lucide="bus" class="w-5 h-5"></i> Transport
+                </a>
+
+                <p class="px-3 text-xs font-semibold text-blue-300 uppercase tracking-wider mb-2 mt-6">System</p>
                 <a href="/admin/settings" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/admin/settings') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
                     <i data-lucide="settings" class="w-5 h-5"></i> Settings
                 </a>
                 
             <?php elseif(isset($_SESSION['role_id']) && $_SESSION['role_id'] == 2): ?>
-                <!-- TEACHER MENU -->
+                <!-- ================= TEACHER MENU ================= -->
                 <p class="px-3 text-xs font-semibold text-blue-300 uppercase tracking-wider mb-2 mt-2">Teacher Portal</p>
                 <a href="/teacher/dashboard" class="flex items-center gap-3 px-3 py-2.5 <?= $_SERVER['REQUEST_URI'] == '/teacher/dashboard' ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
                     <i data-lucide="layout-dashboard" class="w-5 h-5"></i> My Dashboard
@@ -155,7 +160,7 @@ $settings = get_settings();
                 </a>
 
             <?php elseif(isset($_SESSION['role_id']) && $_SESSION['role_id'] == 3): ?>
-                <!-- PARENT MENU -->
+                <!-- ================= PARENT MENU ================= -->
                 <p class="px-3 text-xs font-semibold text-blue-300 uppercase tracking-wider mb-2 mt-2">Parent Portal</p>
                 <a href="/parent/dashboard" class="flex items-center gap-3 px-3 py-2.5 <?= $_SERVER['REQUEST_URI'] == '/parent/dashboard' ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
                     <i data-lucide="home" class="w-5 h-5"></i> My Dashboard
@@ -169,9 +174,12 @@ $settings = get_settings();
                 <a href="/parent/behavior" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/parent/behavior') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
                     <i data-lucide="award" class="w-5 h-5"></i> Behavior Record
                 </a>
+                <a href="/parent/transport" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/parent/transport') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
+                    <i data-lucide="bus" class="w-5 h-5"></i> Bus Route
+                </a>
 
             <?php elseif(isset($_SESSION['role_id']) && $_SESSION['role_id'] == 4): ?>
-                <!-- STUDENT MENU -->
+                <!-- ================= STUDENT MENU ================= -->
                 <p class="px-3 text-xs font-semibold text-blue-300 uppercase tracking-wider mb-2 mt-2">Student Portal</p>
                 <a href="/student/dashboard" class="flex items-center gap-3 px-3 py-2.5 <?= $_SERVER['REQUEST_URI'] == '/student/dashboard' ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
                     <i data-lucide="home" class="w-5 h-5"></i> My Dashboard
@@ -184,6 +192,9 @@ $settings = get_settings();
                 </a>
                 <a href="/student/behavior" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/student/behavior') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
                     <i data-lucide="award" class="w-5 h-5"></i> Behavior Record
+                </a>
+                <a href="/student/transport" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/student/transport') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
+                    <i data-lucide="bus" class="w-5 h-5"></i> My Bus
                 </a>
             <?php endif; ?>
         </nav>
