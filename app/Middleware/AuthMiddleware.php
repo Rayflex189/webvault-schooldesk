@@ -4,6 +4,7 @@
 namespace App\Middleware;
 
 class AuthMiddleware {
+    
     /**
      * Ensure the user is logged in
      */
@@ -18,9 +19,11 @@ class AuthMiddleware {
      */
     public static function adminOnly() {
         self::handle();
+        
         if ($_SESSION['role_id'] !== 1) {
             http_response_code(403);
-            die("403 - Unauthorized Access");
+            require_once __DIR__ . '/../../resources/views/errors/403.php';
+            exit;
         }
     }
 }
