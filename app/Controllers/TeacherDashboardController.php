@@ -6,6 +6,7 @@ namespace App\Controllers;
 use App\Middleware\TeacherMiddleware;
 use App\Models\TeacherAssignment;
 use App\Models\Timetable;
+use Database; // <-- This was missing!
 
 class TeacherDashboardController {
     
