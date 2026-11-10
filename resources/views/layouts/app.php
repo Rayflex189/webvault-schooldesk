@@ -117,6 +117,9 @@ $settings = get_settings();
             <a href="/admin/lesson-notes" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/admin/lesson-notes') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
     <i data-lucide="file-text" class="w-5 h-5"></i> Lesson Notes
             </a>
+            <a href="/teacher/behavior" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/teacher/behavior') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
+    <i data-lucide="award" class="w-5 h-5"></i> Behavior Log
+            </a>
                 <a href="/admin/reports" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/admin/reports') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
                     <i data-lucide="printer" class="w-5 h-5"></i> Report Cards
                 </a>
@@ -150,6 +153,9 @@ $settings = get_settings();
                 <a href="/teacher/timetable" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/teacher/timetable') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
                     <i data-lucide="clock" class="w-5 h-5"></i> My Timetable
                 </a>
+            <a href="/parent/behavior" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/parent/behavior') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
+    <i data-lucide="award" class="w-5 h-5"></i> Behavior Record
+            </a>
 
             <?php elseif(isset($_SESSION['role_id']) && $_SESSION['role_id'] == 3): ?>
                 <!-- PARENT MENU -->
@@ -163,6 +169,9 @@ $settings = get_settings();
                 <a href="/parent/timetable" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/parent/timetable') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
                     <i data-lucide="clock" class="w-5 h-5"></i> Timetable
                 </a>
+            <a href="/student/behavior" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/student/behavior') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
+    <i data-lucide="award" class="w-5 h-5"></i> Behavior Record
+            </a>
 
             <?php elseif(isset($_SESSION['role_id']) && $_SESSION['role_id'] == 4): ?>
                 <!-- STUDENT MENU -->
