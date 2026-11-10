@@ -33,6 +33,7 @@ class Student {
             $passwordHash = password_hash('password123', PASSWORD_DEFAULT);
             $username = strtolower(str_replace('/', '', $data['admission_number'])); 
             
+            // 1. Create User Account
             $userSql = "INSERT INTO users (role_id, username, email, password_hash) VALUES (4, :username, :email, :password_hash)";
             $userStmt = $pdo->prepare($userSql);
             $userStmt->execute([
@@ -42,8 +43,9 @@ class Student {
             ]);
             $userId = $pdo->lastInsertId();
 
-            $sql = "INSERT INTO students (user_id, admission_number, first_name, last_name, gender, dob, class_id) 
-                    VALUES (:user_id, :admission_number, :first_name, :last_name, :gender, :dob, :class_id)";
+            // 2. Create Student Profile
+            $sql = "INSERT INTO students (user_id, admission_number, first_name, last_name, gender, dob, class_id, house) 
+                    VALUES (:user_id, :admission_number, :first_name, :last_name, :gender, :dob, :class_id, :house)";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([
                 ':user_id'          => $userId,
@@ -52,7 +54,8 @@ class Student {
                 ':last_name'        => $data['last_name'],
                 ':gender'           => $data['gender'],
                 ':dob'              => $data['dob'],
-                ':class_id'         => $data['class_id']
+                ':class_id'         => $data['class_id'],
+                ':house'            => !empty($data['house']) ? $data['house'] : null
             ]);
             $pdo->commit();
             return true;
@@ -65,7 +68,7 @@ class Student {
     public function update($id, $data) {
         $pdo = Database::getInstance();
         $sql = "UPDATE students 
-                SET first_name = :first_name, last_name = :last_name, gender = :gender, dob = :dob, class_id = :class_id, status = :status 
+                SET first_name = :first_name, last_name = :last_name, gender = :gender, dob = :dob, class_id = :class_id, status = :status, house = :house 
                 WHERE id = :id";
         $stmt = $pdo->prepare($sql);
         return $stmt->execute([
@@ -75,29 +78,21 @@ class Student {
             ':dob'        => $data['dob'],
             ':class_id'   => $data['class_id'],
             ':status'     => $data['status'],
+            ':house'      => !empty($data['house']) ? $data['house'] : null,
             ':id'         => $id
         ]);
     }
 
-    /**
-     * Delete a student and their associated user account
-     */
     public function delete($id) {
         $pdo = Database::getInstance();
-        
-        // Find the user_id linked to this student
         $stmt = $pdo->prepare("SELECT user_id FROM students WHERE id = ?");
         $stmt->execute([$id]);
         $student = $stmt->fetch();
         
         if ($student && $student['user_id']) {
-            // Deleting the user cascades and deletes the student profile, 
-            // attendance, results, and payments due to foreign keys.
             $stmt = $pdo->prepare("DELETE FROM users WHERE id = ?");
             return $stmt->execute([$student['user_id']]);
         }
-        
-        // Fallback
         $stmt = $pdo->prepare("DELETE FROM students WHERE id = ?");
         return $stmt->execute([$id]);
     }
