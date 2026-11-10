@@ -15,6 +15,7 @@ use App\Controllers\TeacherAssignmentController;
 use App\Controllers\AttendanceController;
 use App\Controllers\ExamController;
 use App\Controllers\TimetableController;
+use App\Controllers\LessonNoteController;
 use App\Controllers\ReportCardController;
 use App\Controllers\FinanceController;
 use App\Controllers\AnnouncementController;
@@ -284,6 +285,20 @@ return [
         $controller->destroy();
     },
 
+    // Admin: Lesson Notes Review
+    'admin/lesson-notes' => function() {
+        $controller = new LessonNoteController();
+        $controller->adminIndex();
+    },
+    'admin/lesson-notes/review' => function() {
+        $controller = new LessonNoteController();
+        $controller->review();
+    },
+    'admin/lesson-notes/update-status' => function() {
+        $controller = new LessonNoteController();
+        $controller->updateStatus();
+    },
+
     // Admin: Report Cards
     'admin/reports' => function() {
         $controller = new ReportCardController();
@@ -412,6 +427,20 @@ return [
     'teacher/timetable' => function() {
         $controller = new TeacherDashboardController();
         $controller->timetable();
+    },
+
+    // Teacher: Lesson Notes
+    'teacher/lesson-notes' => function() {
+        $controller = new LessonNoteController();
+        $controller->index();
+    },
+    'teacher/lesson-notes/create' => function() {
+        $controller = new LessonNoteController();
+        $controller->create();
+    },
+    'teacher/lesson-notes/store' => function() {
+        $controller = new LessonNoteController();
+        $controller->store();
     },
 
     // ==========================================
