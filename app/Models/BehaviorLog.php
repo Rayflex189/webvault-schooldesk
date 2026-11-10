@@ -47,4 +47,3 @@ class BehaviorLog {
         return $stmt->fetchAll();
     }
 }
-
