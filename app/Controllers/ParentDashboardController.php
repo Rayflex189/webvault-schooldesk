@@ -4,25 +4,21 @@
 namespace App\Controllers;
 
 use App\Middleware\ParentMiddleware;
+use App\Models\Timetable;
 use Database;
 
 class ParentDashboardController {
     
-    /**
-     * Show the Parent Dashboard with linked children and announcements
-     */
     public function index() {
         ParentMiddleware::handle();
         
         $pdo = Database::getInstance();
         $userId = $_SESSION['user_id'];
 
-        // 1. Get the Guardian Profile
         $stmt = $pdo->prepare("SELECT * FROM guardians WHERE user_id = ?");
         $stmt->execute([$userId]);
         $guardian = $stmt->fetch();
 
-        // 2. Get linked children
         $children = [];
         if ($guardian) {
             $stmt = $pdo->prepare("
@@ -36,7 +32,6 @@ class ParentDashboardController {
             $children = $stmt->fetchAll();
         }
 
-        // 3. Get recent announcements for parents
         $stmt = $pdo->query("SELECT * FROM announcements WHERE target_audience = 'parents' OR target_audience = 'all' ORDER BY created_at DESC LIMIT 3");
         $announcements = $stmt->fetchAll();
 
@@ -47,9 +42,6 @@ class ParentDashboardController {
         ]);
     }
 
-    /**
-     * Securely generate a report card for a linked child
-     */
     public function reportCard() {
         ParentMiddleware::handle();
         
@@ -65,7 +57,6 @@ class ParentDashboardController {
             redirect('parent/dashboard');
         }
 
-        // 1. Get Guardian ID
         $stmt = $pdo->prepare("SELECT id FROM guardians WHERE user_id = ?");
         $stmt->execute([$userId]);
         $guardian = $stmt->fetch();
@@ -75,7 +66,6 @@ class ParentDashboardController {
             die("403 - Unauthorized.");
         }
 
-        // 2. SECURITY CHECK: Is this student linked to this guardian?
         $stmt = $pdo->prepare("SELECT COUNT(*) FROM student_guardians WHERE guardian_id = ? AND student_id = ?");
         $stmt->execute([$guardian['id'], $studentId]);
         
@@ -84,7 +74,6 @@ class ParentDashboardController {
             die("403 - Unauthorized. You are not authorized to view this student's records.");
         }
 
-        // 3. Fetch Data using the ReportCard model
         $reportModel = new \App\Models\ReportCard();
         $student = $reportModel->getStudentDetails($studentId);
         $results = $reportModel->getStudentResults($studentId, $session, $term);
@@ -100,7 +89,6 @@ class ParentDashboardController {
             $position = $reportModel->calculatePosition($studentId, $student['class_id'], $session, $term);
         }
 
-        // 4. Render the standalone print view
         view('admin.reports.print', [
             'student' => $student,
             'results' => $results,
@@ -112,9 +100,6 @@ class ParentDashboardController {
         ]);
     }
 
-    /**
-     * View fee status for a linked child
-     */
     public function fees() {
         ParentMiddleware::handle();
         
@@ -126,7 +111,6 @@ class ParentDashboardController {
             redirect('parent/dashboard');
         }
 
-        // 1. Verify Guardian Link (Security)
         $stmt = $pdo->prepare("SELECT id FROM guardians WHERE user_id = ?");
         $stmt->execute([$userId]);
         $guardian = $stmt->fetch();
@@ -140,12 +124,10 @@ class ParentDashboardController {
             die("403 - Unauthorized. You are not authorized to view this student's fees.");
         }
 
-        // 2. Fetch Student Details
         $stmt = $pdo->prepare("SELECT s.*, c.name AS class_name FROM students s JOIN classes c ON s.class_id = c.id WHERE s.id = ?");
         $stmt->execute([$studentId]);
         $student = $stmt->fetch();
 
-        // 3. Fetch Fee Summary using our Finance model
         $financeModel = new \App\Models\Finance();
         $settings = get_settings();
         $session = $settings['current_session'] ?? '2024/2025';
@@ -153,7 +135,6 @@ class ParentDashboardController {
         
         $balanceInfo = $financeModel->getStudentBalance($studentId, $session, $term);
 
-        // 4. Fetch Payment History
         $stmt = $pdo->prepare("SELECT * FROM payments WHERE student_id = ? AND session = ? AND term = ? ORDER BY created_at DESC");
         $stmt->execute([$studentId, $session, $term]);
         $payments = $stmt->fetchAll();
@@ -167,15 +148,11 @@ class ParentDashboardController {
         ]);
     }
 
-    /**
-     * View booklists for linked children
-     */
     public function books() {
         ParentMiddleware::handle();
         $pdo = Database::getInstance();
         $userId = $_SESSION['user_id'];
 
-        // Get linked children
         $stmt = $pdo->prepare("
             SELECT s.id, s.first_name, s.last_name, s.class_id, c.name AS class_name
             FROM students s
@@ -200,9 +177,6 @@ class ParentDashboardController {
         view('parent.books', ['childrenBooks' => $childrenBooks]);
     }
 
-    /**
-     * Initiate Paystack Payment
-     */
     public function initiatePayment() {
         ParentMiddleware::handle();
         verify_csrf($_POST['csrf_token'] ?? '');
@@ -212,12 +186,10 @@ class ParentDashboardController {
         $pdo = Database::getInstance();
         $userId = $_SESSION['user_id'];
 
-        // Security: Verify child belongs to parent
         $stmt = $pdo->prepare("SELECT COUNT(*) FROM student_guardians sg JOIN guardians g ON sg.guardian_id = g.id WHERE g.user_id = ? AND sg.student_id = ?");
         $stmt->execute([$userId, $studentId]);
         if ($stmt->fetchColumn() == 0) die("403 - Unauthorized.");
 
-        // Get parent email
         $stmt = $pdo->prepare("SELECT email FROM users WHERE id = ?");
         $stmt->execute([$userId]);
         $user = $stmt->fetch();
@@ -230,7 +202,6 @@ class ParentDashboardController {
         $response = $paystack->initialize($user['email'], $amount, $reference, $callbackUrl);
 
         if ($response && $response['status']) {
-            // Redirect to Paystack checkout page
             header("Location: " . $response['data']['authorization_url']);
             exit;
         } else {
@@ -239,9 +210,6 @@ class ParentDashboardController {
         }
     }
 
-    /**
-     * Verify Paystack Callback
-     */
     public function verifyPayment() {
         ParentMiddleware::handle();
         
@@ -256,9 +224,6 @@ class ParentDashboardController {
         $response = $paystack->verify($reference);
 
         if ($response && $response['status'] && $response['data']['status'] === 'success') {
-            
-            // SECURITY: Do NOT trust the URL for the amount. Get it from the verified Paystack response.
-            // Paystack returns amount in kobo, so we divide by 100.
             $verifiedAmount = $response['data']['amount'] / 100; 
 
             $pdo = Database::getInstance();
@@ -275,14 +240,13 @@ class ParentDashboardController {
                     $reference, 
                     $settings['current_term'], 
                     $settings['current_session'], 
-                    $_SESSION['user_id'] // Parents are recording their own payments
+                    $_SESSION['user_id']
                 ]);
                 
                 $pdo->commit();
                 $_SESSION['success'] = "Payment of ₦" . number_format($verifiedAmount, 2) . " was successful!";
             } catch (\Exception $e) {
                 $pdo->rollBack();
-                // UPDATE: Show the exact SQL error instead of a generic message
                 $_SESSION['error'] = "DB Error: " . $e->getMessage();
             }
         } else {
@@ -290,5 +254,50 @@ class ParentDashboardController {
         }
 
         redirect('parent/fees?student_id=' . $studentId);
+    }
+
+    public function timetable() {
+        ParentMiddleware::handle();
+        $pdo = Database::getInstance();
+        $userId = $_SESSION['user_id'];
+
+        $stmt = $pdo->prepare("
+            SELECT s.id, s.first_name, s.last_name, s.class_id, c.name AS class_name
+            FROM students s
+            JOIN student_guardians sg ON s.id = sg.student_id
+            JOIN guardians g ON sg.guardian_id = g.id
+            JOIN classes c ON s.class_id = c.id
+            WHERE g.user_id = ?
+        ");
+        $stmt->execute([$userId]);
+        $children = $stmt->fetchAll();
+
+        $settings = get_settings();
+        $session = $settings['current_session'] ?? '2024/2025';
+        $term = $settings['current_term'] ?? 'First Term';
+        
+        $selectedChildId = $_GET['student_id'] ?? ($children[0]['id'] ?? null);
+        
+        $selectedChild = null;
+        foreach($children as $c) {
+            if($c['id'] == $selectedChildId) {
+                $selectedChild = $c;
+                break;
+            }
+        }
+
+        $slots = [];
+        if($selectedChild) {
+            $timetableModel = new Timetable();
+            $slots = $timetableModel->getSlots($selectedChild['class_id'], $session, $term);
+        }
+
+        view('parent.timetable', [
+            'children' => $children,
+            'slots' => $slots,
+            'selectedChild' => $selectedChild,
+            'session' => $session,
+            'term' => $term
+        ]);
     }
 }
