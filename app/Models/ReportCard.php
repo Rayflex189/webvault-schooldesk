@@ -13,9 +13,6 @@ class ReportCard {
         return $pdo->query("SELECT id, name FROM classes ORDER BY name ASC")->fetchAll();
     }
 
-    /**
-     * Get all students so we can populate the dropdown
-     */
     public function getStudents() {
         $pdo = Database::getInstance();
         return $pdo->query("
@@ -29,8 +26,9 @@ class ReportCard {
 
     public function getStudentDetails($studentId) {
         $pdo = Database::getInstance();
+        // Fetches the grading scheme from classes
         $stmt = $pdo->prepare("
-            SELECT s.*, c.name AS class_name 
+            SELECT s.*, c.name AS class_name, c.grading_scheme
             FROM students s 
             LEFT JOIN classes c ON s.class_id = c.id 
             WHERE s.id = ?
@@ -39,9 +37,6 @@ class ReportCard {
         return $stmt->fetch();
     }
 
-    /**
-     * Fetch all subject results for a specific student
-     */
     public function getStudentResults($studentId, $session, $term) {
         $pdo = Database::getInstance();
         $stmt = $pdo->prepare("
@@ -55,13 +50,9 @@ class ReportCard {
         return $stmt->fetchAll();
     }
 
-    /**
-     * Calculate the student's position in their class based on total aggregate score
-     */
     public function calculatePosition($studentId, $classId, $session, $term) {
         $pdo = Database::getInstance();
         
-        // Get the sum of total scores for all students in this class
         $stmt = $pdo->prepare("
             SELECT student_id, SUM(total_score) as aggregate 
             FROM exam_results 
@@ -84,7 +75,6 @@ class ReportCard {
 
         if ($position === 0) return "N/A";
 
-        // Format the position (e.g., 1st, 2nd, 3rd, 4th)
         $suffix = 'th';
         if ($position % 10 == 1 && $position % 100 != 11) $suffix = 'st';
         elseif ($position % 10 == 2 && $position % 100 != 12) $suffix = 'nd';
