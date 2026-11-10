@@ -408,6 +408,12 @@ return [
         $controller->storeRecommendation();
     },
 
+    // Teacher: Timetable
+    'teacher/timetable' => function() {
+        $controller = new TeacherDashboardController();
+        $controller->timetable();
+    },
+
     // ==========================================
     // Parent Portal Routes
     // ==========================================
@@ -438,6 +444,12 @@ return [
         $controller->verifyPayment();
     },
 
+    // Parent: Timetable
+    'parent/timetable' => function() {
+        $controller = new ParentDashboardController();
+        $controller->timetable();
+    },
+
     // ==========================================
     // Student Portal Routes
     // ==========================================
@@ -452,5 +464,11 @@ return [
     'student/books' => function() {
         $controller = new StudentDashboardController();
         $controller->books();
+    },
+
+    // Student: Timetable
+    'student/timetable' => function() {
+        $controller = new StudentDashboardController();
+        $controller->timetable();
     }
 ];
