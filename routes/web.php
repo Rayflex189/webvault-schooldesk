@@ -16,6 +16,7 @@ use App\Controllers\AttendanceController;
 use App\Controllers\ExamController;
 use App\Controllers\TimetableController;
 use App\Controllers\LessonNoteController;
+use App\Controllers\BehaviorController;
 use App\Controllers\ReportCardController;
 use App\Controllers\FinanceController;
 use App\Controllers\AnnouncementController;
@@ -443,6 +444,16 @@ return [
         $controller->store();
     },
 
+    // Teacher: Behavior
+    'teacher/behavior' => function() {
+        $controller = new BehaviorController();
+        $controller->teacherIndex();
+    },
+    'teacher/behavior/store' => function() {
+        $controller = new BehaviorController();
+        $controller->store();
+    },
+
     // ==========================================
     // Parent Portal Routes
     // ==========================================
@@ -479,6 +490,12 @@ return [
         $controller->timetable();
     },
 
+    // Parent: Behavior
+    'parent/behavior' => function() {
+        $controller = new BehaviorController();
+        $controller->parentIndex();
+    },
+
     // ==========================================
     // Student Portal Routes
     // ==========================================
@@ -499,5 +516,11 @@ return [
     'student/timetable' => function() {
         $controller = new StudentDashboardController();
         $controller->timetable();
+    },
+
+    // Student: Behavior
+    'student/behavior' => function() {
+        $controller = new BehaviorController();
+        $controller->studentIndex();
     }
 ];
