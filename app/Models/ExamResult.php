@@ -18,12 +18,8 @@ class ExamResult {
         return $pdo->query("SELECT id, name, code FROM subjects ORDER BY name ASC")->fetchAll();
     }
 
-    /**
-     * Get students in a class along with their existing scores for a specific subject/term
-     */
     public function getStudentsWithScores($classId, $subjectId, $session, $term) {
         $pdo = Database::getInstance();
-        
         $sql = "SELECT s.id, s.first_name, s.last_name, s.admission_number, 
                        r.ca_score, r.exam_score, r.total_score, r.grade
                 FROM students s 
@@ -41,26 +37,42 @@ class ExamResult {
             ':session' => $session,
             ':term' => $term
         ]);
-        
         return $stmt->fetchAll();
     }
 
     /**
-     * Calculate grade based on total score
+     * Calculate grade and remark based on the grading scheme
      */
-    public function calculateGrade($total) {
-        if ($total >= 70) return 'A';
-        if ($total >= 60) return 'B';
-        if ($total >= 50) return 'C';
-        if ($total >= 40) return 'D';
-        return 'F';
+    public function calculateGrade($total, $scheme = 'standard') {
+        if ($scheme === 'waec') {
+            if ($total >= 75) return ['grade' => 'A1', 'remark' => 'Excellent'];
+            if ($total >= 70) return ['grade' => 'B2', 'remark' => 'Very Good'];
+            if ($total >= 65) return ['grade' => 'B3', 'remark' => 'Good'];
+            if ($total >= 60) return ['grade' => 'C4', 'remark' => 'Credit'];
+            if ($total >= 55) return ['grade' => 'C5', 'remark' => 'Credit'];
+            if ($total >= 50) return ['grade' => 'C6', 'remark' => 'Credit'];
+            if ($total >= 45) return ['grade' => 'D7', 'remark' => 'Pass'];
+            if ($total >= 40) return ['grade' => 'E8', 'remark' => 'Pass'];
+            return ['grade' => 'F9', 'remark' => 'Fail'];
+        } else {
+            // Standard A-F
+            if ($total >= 70) return ['grade' => 'A', 'remark' => 'Excellent'];
+            if ($total >= 60) return ['grade' => 'B', 'remark' => 'Very Good'];
+            if ($total >= 50) return ['grade' => 'C', 'remark' => 'Good'];
+            if ($total >= 45) return ['grade' => 'D', 'remark' => 'Fair'];
+            if ($total >= 40) return ['grade' => 'E', 'remark' => 'Pass'];
+            return ['grade' => 'F', 'remark' => 'Fail'];
+        }
     }
 
-    /**
-     * Save results using INSERT ON DUPLICATE KEY UPDATE
-     */
     public function saveResults($classId, $subjectId, $session, $term, $resultsData) {
         $pdo = Database::getInstance();
+        
+        // 1. Fetch the class's grading scheme
+        $stmt = $pdo->prepare("SELECT grading_scheme FROM classes WHERE id = ?");
+        $stmt->execute([$classId]);
+        $scheme = $stmt->fetchColumn() ?: 'standard';
+
         $pdo->beginTransaction();
         
         try {
@@ -83,7 +95,7 @@ class ExamResult {
                 $exam = min($exam, 70);
                 
                 $total = $ca + $exam;
-                $grade = $this->calculateGrade($total);
+                $gradeData = $this->calculateGrade($total, $scheme);
 
                 $stmt->execute([
                     ':student_id' => $studentId,
@@ -94,7 +106,7 @@ class ExamResult {
                     ':ca_score'   => $ca,
                     ':exam_score' => $exam,
                     ':total_score'=> $total,
-                    ':grade'      => $grade
+                    ':grade'      => $gradeData['grade']
                 ]);
             }
             
