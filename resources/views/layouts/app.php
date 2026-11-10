@@ -114,6 +114,9 @@ $settings = get_settings();
                 <a href="/admin/timetables" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/admin/timetables') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
                     <i data-lucide="clock" class="w-5 h-5"></i> Timetable
                 </a>
+            <a href="/admin/lesson-notes" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/admin/lesson-notes') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
+    <i data-lucide="file-text" class="w-5 h-5"></i> Lesson Notes
+            </a>
                 <a href="/admin/reports" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/admin/reports') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
                     <i data-lucide="printer" class="w-5 h-5"></i> Report Cards
                 </a>
@@ -138,6 +141,9 @@ $settings = get_settings();
                 <a href="/teacher/exams" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/teacher/exams') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
                     <i data-lucide="file-edit" class="w-5 h-5"></i> Enter Scores
                 </a>
+            <a href="/teacher/lesson-notes" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/teacher/lesson-notes') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
+    <i data-lucide="file-text" class="w-5 h-5"></i> Lesson Notes
+            </a>
                 <a href="/teacher/books" class="flex items-center gap-3 px-3 py-2.5 <?= strpos($_SERVER['REQUEST_URI'], '/teacher/books') !== false ? 'bg-blue-800 text-white' : 'text-blue-200 hover:bg-blue-800/50 hover:text-white' ?> rounded-lg font-medium transition-colors">
                     <i data-lucide="book-open" class="w-5 h-5"></i> Class Books
                 </a>
