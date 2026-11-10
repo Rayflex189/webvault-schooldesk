@@ -1,15 +1,17 @@
 <?php ob_start(); ?>
 <div class="flex justify-between items-center mb-6">
     <div>
-        <h1 class="text-2xl font-bold text-gray-800">Behavior Tracker</h1>
-        <p class="text-sm text-gray-500 mt-1">Log positive and negative behaviors for your students.</p>
+        <h1 class="text-2xl font-bold text-gray-800">Daily Behavior Tracker</h1>
+        <p class="text-sm text-gray-500 mt-1">Log daily positive and negative behaviors for your students.</p>
     </div>
 </div>
 
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
     <!-- Log Form -->
     <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 h-fit">
-        <h2 class="text-lg font-bold text-gray-800 mb-4 border-b pb-2">Log New Behavior</h2>
+        <h2 class="text-lg font-bold text-gray-800 mb-4 border-b pb-2 flex items-center gap-2">
+            <i data-lucide="calendar-check" class="w-5 h-5 text-accent"></i> Log Today's Assessment
+        </h2>
         <form action="/teacher/behavior/store" method="POST" class="space-y-4">
             <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
             
@@ -48,7 +50,9 @@
                 <textarea name="description" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent"></textarea>
             </div>
 
-            <button type="submit" class="w-full bg-primary hover:bg-blue-900 text-white px-4 py-2.5 rounded-lg font-bold transition">Save Behavior Log</button>
+            <button type="submit" class="w-full bg-primary hover:bg-blue-900 text-white px-4 py-2.5 rounded-lg font-bold transition flex items-center justify-center gap-2">
+                <i data-lucide="save" class="w-4 h-4"></i> Save Daily Log
+            </button>
         </form>
     </div>
 
@@ -72,7 +76,7 @@
                             <?php if($log['description']): ?>
                                 <p class="text-xs text-gray-500 mt-1"><?= e($log['description']) ?></p>
                             <?php endif; ?>
-                            <p class="text-[10px] text-gray-400 mt-1"><?= date('M j, Y', strtotime($log['date'])) ?></p>
+                            <p class="text-[10px] text-gray-400 mt-1 font-bold">Logged on: <?= date('l, M j, Y', strtotime($log['date'])) ?></p>
                         </div>
                     </div>
                 <?php endforeach; ?>
