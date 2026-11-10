@@ -3,6 +3,7 @@
 ob_start();
 ?>
 
+<!-- Welcome Header -->
 <div class="mb-8">
     <h1 class="text-2xl font-bold text-gray-800">Teacher Portal</h1>
     <p class="text-sm text-gray-500 mt-1">Welcome back, <?= htmlspecialchars($_SESSION['username'] ?? 'Teacher') ?>! Here is your overview.</p>
@@ -10,6 +11,7 @@ ob_start();
 
 <!-- Quick Actions Grid -->
 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+    <!-- Take Attendance -->
     <a href="/teacher/attendance" class="p-6 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 hover:border-primary/30 transition-all shadow-sm flex flex-col items-center gap-3 text-gray-700 hover:text-primary group">
         <div class="w-12 h-12 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center group-hover:scale-110 transition-transform">
             <i data-lucide="clipboard-check" class="w-6 h-6"></i>
@@ -17,6 +19,7 @@ ob_start();
         <span class="font-bold">Take Attendance</span>
     </a>
     
+    <!-- Enter Exam Scores -->
     <a href="/teacher/exams" class="p-6 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 hover:border-primary/30 transition-all shadow-sm flex flex-col items-center gap-3 text-gray-700 hover:text-primary group">
         <div class="w-12 h-12 rounded-full bg-purple-50 text-purple-600 flex items-center justify-center group-hover:scale-110 transition-transform">
             <i data-lucide="file-edit" class="w-6 h-6"></i>
@@ -24,6 +27,7 @@ ob_start();
         <span class="font-bold">Enter Exam Scores</span>
     </a>
     
+    <!-- Behavior Log -->
     <a href="/teacher/behavior" class="p-6 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 hover:border-primary/30 transition-all shadow-sm flex flex-col items-center gap-3 text-gray-700 hover:text-primary group">
         <div class="w-12 h-12 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center group-hover:scale-110 transition-transform">
             <i data-lucide="award" class="w-6 h-6"></i>
@@ -32,7 +36,7 @@ ob_start();
     </a>
 </div>
 
-<!-- My Assignments -->
+<!-- My Assignments Section -->
 <h2 class="text-lg font-bold text-gray-800 mb-4">My Assigned Classes</h2>
 
 <?php if(empty($assignments)): ?>
@@ -44,7 +48,7 @@ ob_start();
 <?php else: ?>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <?php 
-        // Group by class to avoid duplicate class cards
+        // Group by class to avoid duplicate class cards if a teacher teaches multiple subjects in one class
         $groupedAssignments = [];
         foreach($assignments as $a) {
             $groupedAssignments[$a['class_id']]['class_name'] = $a['class_name'];
@@ -54,7 +58,7 @@ ob_start();
         foreach($groupedAssignments as $classId => $data): 
         ?>
             <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 hover:shadow-md transition-shadow relative overflow-hidden">
-                <!-- Decorative accent -->
+                <!-- Decorative accent bar at the top -->
                 <div class="absolute top-0 left-0 w-full h-1 bg-primary"></div>
                 
                 <div class="flex items-start justify-between mb-4">
@@ -69,6 +73,7 @@ ob_start();
                     </div>
                 </div>
                 
+                <!-- List of subjects for this class -->
                 <div class="mb-5 space-y-1">
                     <?php foreach($data['subjects'] as $subject): ?>
                         <span class="inline-block bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded border border-gray-200 mr-1 mb-1">
@@ -77,6 +82,7 @@ ob_start();
                     <?php endforeach; ?>
                 </div>
 
+                <!-- Quick links specific to this class -->
                 <div class="grid grid-cols-2 gap-2 border-t pt-4">
                     <a href="/teacher/attendance?class_id=<?= $classId ?>" class="flex items-center justify-center gap-2 bg-green-50 text-green-700 hover:bg-green-100 px-3 py-2 rounded-lg text-sm font-medium transition-colors">
                         <i data-lucide="clipboard-check" class="w-4 h-4"></i> Attendance
