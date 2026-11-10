@@ -1,4 +1,3 @@
-
 <?php
 // resources/views/admin/classes/edit.php
 ob_start();
@@ -27,6 +26,14 @@ ob_start();
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Maximum Capacity</label>
                 <input type="number" name="capacity" value="<?= e($class['capacity']) ?>" required min="1" class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent">
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Grading Scheme</label>
+                <select name="grading_scheme" required class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent bg-white">
+                    <option value="standard" <?= ($class['grading_scheme'] ?? 'standard') == 'standard' ? 'selected' : '' ?>>Standard (A - F)</option>
+                    <option value="waec" <?= ($class['grading_scheme'] ?? 'standard') == 'waec' ? 'selected' : '' ?>>WAEC / NECO (A1 - F9)</option>
+                </select>
             </div>
 
             <div class="pt-4 border-t border-gray-100 flex justify-end gap-3">
