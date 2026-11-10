@@ -17,6 +17,7 @@ use App\Controllers\ExamController;
 use App\Controllers\TimetableController;
 use App\Controllers\LessonNoteController;
 use App\Controllers\BehaviorController;
+use App\Controllers\TransportController;
 use App\Controllers\ReportCardController;
 use App\Controllers\FinanceController;
 use App\Controllers\AnnouncementController;
@@ -336,6 +337,28 @@ return [
         $controller->auditTrail();
     },
 
+    // Admin: Transport
+    'admin/transport' => function() {
+        $controller = new TransportController();
+        $controller->index();
+    },
+    'admin/transport/store' => function() {
+        $controller = new TransportController();
+        $controller->store();
+    },
+    'admin/transport/delete' => function() {
+        $controller = new TransportController();
+        $controller->destroy();
+    },
+    'admin/transport/assign' => function() {
+        $controller = new TransportController();
+        $controller->assign();
+    },
+    'admin/transport/update-assignment' => function() {
+        $controller = new TransportController();
+        $controller->updateAssignment();
+    },
+
     // Admin: Announcements
     'admin/announcements' => function() {
         $controller = new AnnouncementController();
@@ -496,6 +519,12 @@ return [
         $controller->parentIndex();
     },
 
+    // Parent: Transport
+    'parent/transport' => function() {
+        $controller = new TransportController();
+        $controller->parentView();
+    },
+
     // ==========================================
     // Student Portal Routes
     // ==========================================
@@ -522,5 +551,11 @@ return [
     'student/behavior' => function() {
         $controller = new BehaviorController();
         $controller->studentIndex();
+    },
+
+    // Student: Transport
+    'student/transport' => function() {
+        $controller = new TransportController();
+        $controller->studentView();
     }
 ];
