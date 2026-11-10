@@ -14,6 +14,7 @@ use App\Controllers\TeacherBookController;
 use App\Controllers\TeacherAssignmentController;
 use App\Controllers\AttendanceController;
 use App\Controllers\ExamController;
+use App\Controllers\TimetableController;
 use App\Controllers\ReportCardController;
 use App\Controllers\FinanceController;
 use App\Controllers\AnnouncementController;
@@ -269,6 +270,20 @@ return [
         $controller->store();
     },
 
+    // Admin: Timetable Management
+    'admin/timetables' => function() {
+        $controller = new TimetableController();
+        $controller->index();
+    },
+    'admin/timetables/store' => function() {
+        $controller = new TimetableController();
+        $controller->store();
+    },
+    'admin/timetables/delete' => function() {
+        $controller = new TimetableController();
+        $controller->destroy();
+    },
+
     // Admin: Report Cards
     'admin/reports' => function() {
         $controller = new ReportCardController();
@@ -300,7 +315,6 @@ return [
         $controller = new FinanceController();
         $controller->saveFees();
     },
-    // NEW: Audit Trail
     'admin/finance/audit-trail' => function() {
         $controller = new FinanceController();
         $controller->auditTrail();
