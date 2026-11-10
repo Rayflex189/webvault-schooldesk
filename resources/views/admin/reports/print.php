@@ -30,13 +30,17 @@
     <!-- Actual Report Card -->
     <div class="max-w-4xl mx-auto bg-white p-10 shadow-lg border border-gray-200" style="min-height: 1000px;">
         
+        <?php $settings = get_settings(); ?>
         <!-- School Header -->
         <div class="text-center border-b-2 border-gray-800 pb-6 mb-6">
             <div class="flex justify-center items-center gap-4 mb-2">
-                <div class="w-16 h-16 bg-primary text-white rounded-full flex items-center justify-center font-bold text-2xl">SD</div>
-                <div>
-                    <h1 class="text-3xl font-extrabold uppercase tracking-widest text-gray-900">WebVault SchoolDesk</h1>
-                    <p class="text-sm text-gray-600 font-medium">123 Education Way, Lagos, Nigeria | info@school.com</p>
+                <div class="w-16 h-16 bg-primary text-white rounded-full flex items-center justify-center font-bold text-2xl uppercase">
+                    <?= substr($settings['school_name'] ?? 'SD', 0, 2) ?>
+                </div>
+                <div class="text-left">
+                    <h1 class="text-3xl font-extrabold uppercase tracking-widest text-gray-900"><?= e($settings['school_name'] ?? 'WebVault SchoolDesk') ?></h1>
+                    <p class="text-sm text-gray-600 font-medium"><?= e($settings['address'] ?? '123 Education Way') ?> | <?= e($settings['phone'] ?? '') ?></p>
+                    <p class="text-xs text-gray-500 italic mt-1">Motto: <?= e($settings['motto'] ?? 'Knowledge is Power') ?></p>
                 </div>
             </div>
             <h2 class="text-xl font-bold bg-gray-100 py-2 rounded uppercase tracking-wide mt-4">Terminal Report Sheet</h2>
@@ -76,22 +80,37 @@
                         </td>
                     </tr>
                 <?php else: ?>
-                    <?php foreach($results as $r): ?>
+                    <?php foreach($results as $r): 
+                        // Recalculate the correct remark based on the class scheme
+                        $scheme = $student['grading_scheme'] ?? 'standard';
+                        $score = $r['total_score'];
+                        
+                        if ($scheme === 'waec') {
+                            if ($score >= 75) $remark = 'Excellent';
+                            elseif ($score >= 70) $remark = 'Very Good';
+                            elseif ($score >= 65) $remark = 'Good';
+                            elseif ($score >= 60) $remark = 'Credit';
+                            elseif ($score >= 55) $remark = 'Credit';
+                            elseif ($score >= 50) $remark = 'Credit';
+                            elseif ($score >= 45) $remark = 'Pass';
+                            elseif ($score >= 40) $remark = 'Pass';
+                            else $remark = 'Fail';
+                        } else {
+                            if ($score >= 70) $remark = 'Excellent';
+                            elseif ($score >= 60) $remark = 'Very Good';
+                            elseif ($score >= 50) $remark = 'Good';
+                            elseif ($score >= 45) $remark = 'Fair';
+                            elseif ($score >= 40) $remark = 'Pass';
+                            else $remark = 'Fail';
+                        }
+                    ?>
                         <tr>
                             <td class="border border-gray-300 px-4 py-2 font-medium"><?= e($r['subject_name']) ?></td>
                             <td class="border border-gray-300 px-4 py-2 text-center"><?= e($r['ca_score']) ?></td>
                             <td class="border border-gray-300 px-4 py-2 text-center"><?= e($r['exam_score']) ?></td>
                             <td class="border border-gray-300 px-4 py-2 text-center font-bold"><?= e($r['total_score']) ?></td>
-                            <td class="border border-gray-300 px-4 py-2 text-center font-bold <?= $r['grade'] == 'F' ? 'text-red-600' : 'text-green-600' ?>"><?= e($r['grade']) ?></td>
-                            <td class="border border-gray-300 px-4 py-2">
-                                <?php 
-                                    if($r['total_score'] >= 70) echo "Excellent";
-                                    elseif($r['total_score'] >= 60) echo "Very Good";
-                                    elseif($r['total_score'] >= 50) echo "Good";
-                                    elseif($r['total_score'] >= 40) echo "Pass";
-                                    else echo "Fail";
-                                ?>
-                            </td>
+                            <td class="border border-gray-300 px-4 py-2 text-center font-bold <?= str_contains($r['grade'], 'F') ? 'text-red-600' : 'text-green-600' ?>"><?= e($r['grade']) ?></td>
+                            <td class="border border-gray-300 px-4 py-2"><?= $remark ?></td>
                         </tr>
                     <?php endforeach; ?>
                 <?php endif; ?>
