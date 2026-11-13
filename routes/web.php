@@ -32,7 +32,7 @@ use App\Controllers\ProfileController;
 
 return [
     // ==========================================
-    // Public Routes (Landing Page & Auth)
+    // Public Routes (Landing Page, Auth & Legal)
     // ==========================================
     '/' => function() {
         $controller = new LandingController();
@@ -71,6 +71,17 @@ return [
         } else {
             $auth->showResetForm();
         }
+    },
+
+    // Legal & Info Pages
+    'terms' => function() {
+        require_once __DIR__ . '/../resources/views/pages/terms.php';
+    },
+    'privacy' => function() {
+        require_once __DIR__ . '/../resources/views/pages/privacy.php';
+    },
+    'technology' => function() {
+        require_once __DIR__ . '/../resources/views/pages/technology.php';
     },
 
     // ==========================================
