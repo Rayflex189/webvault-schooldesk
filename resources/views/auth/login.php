@@ -98,7 +98,7 @@
                             <input type="checkbox" id="remember" class="h-4 w-4 text-accent focus:ring-accent border-gray-300 rounded">
                             <label for="remember" class="ml-2 block text-sm text-gray-700">Remember me</label>
                         </div>
-                        <a href="#" class="text-sm font-medium text-accent hover:underline">Forgot password?</a>
+                        <a href="/forgot-password" class="text-sm font-medium text-accent hover:underline">Forgot password?</a>
                     </div>
 
                     <button type="submit" 
