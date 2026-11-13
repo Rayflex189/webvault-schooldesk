@@ -303,14 +303,21 @@ if (empty($heroLine2)) { $heroLine2 = 'DESK'; }
             </div>
 
             <div>
-                <h4 class="font-bold mb-4 uppercase tracking-wider text-sm text-white">Quick Links</h4>
-                <ul class="space-y-3 text-sm text-blue-200">
-                    <li><a href="#about" class="hover:text-white transition">About Us</a></li>
-                    <li><a href="#gallery" class="hover:text-white transition">Campus Life</a></li>
-                    <li><a href="/login" class="hover:text-white transition">Portal Login</a></li>
-                    <li><a href="#contact" class="hover:text-white transition">Contact Support</a></li>
-                </ul>
-            </div>
+    <h4 class="font-bold mb-4 uppercase tracking-wider text-sm text-white">Quick Links</h4>
+    <ul class="space-y-3 text-sm text-blue-200">
+        <li><a href="#about" class="hover:text-white transition">About Us</a></li>
+        <li><a href="/technology" class="hover:text-white transition">Our Technology</a></li>
+        <li><a href="/login" class="hover:text-white transition">Portal Login</a></li>
+    </ul>
+</div>
+
+<div>
+    <h4 class="font-bold mb-4 uppercase tracking-wider text-sm text-white">Legal</h4>
+    <ul class="space-y-3 text-sm text-blue-200">
+        <li><a href="/terms" class="hover:text-white transition">Terms of Service</a></li>
+        <li><a href="/privacy" class="hover:text-white transition">Privacy Policy</a></li>
+    </ul>
+</div>
         </div>
         
         <div class="max-w-7xl mx-auto mt-12 pt-8 border-t border-blue-800 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-blue-300">
