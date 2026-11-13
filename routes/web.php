@@ -54,6 +54,24 @@ return [
         $auth = new AuthController();
         $auth->logout();
     },
+    
+    // Forgot & Reset Password
+    'forgot-password' => function() {
+        $auth = new AuthController();
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $auth->sendResetLink();
+        } else {
+            $auth->showForgotForm();
+        }
+    },
+    'reset-password' => function() {
+        $auth = new AuthController();
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $auth->resetPassword();
+        } else {
+            $auth->showResetForm();
+        }
+    },
 
     // ==========================================
     // Protected User Routes (All Roles)
